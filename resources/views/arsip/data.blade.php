@@ -8,8 +8,13 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css">
 @endsection
 
-
 @section('content')
+@if (session('success'))
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+@endif
+
 @if (Auth::user()->roles->pluck('name')->contains('super admin') ||
 Auth::user()->roles->pluck('name')->contains('admin'))
 <div class="card">

@@ -214,7 +214,7 @@ class ArsipController extends Controller
                 $request->file_arsip->move(public_path()."/upload/$tahun/". $jenis, $namaFile);
                 $validateData['file_arsip'] = $namaFile;
                 $arsip->update($validateData);
-                return redirect()->route('arsip.index')->with('success', 'Data berhasil diubah');
+                return redirect()->route('arsip.data')->with('success', 'Data berhasil diubah');
                 
             }else{
                 //echo "update tidak punya gambar";
@@ -238,10 +238,10 @@ class ArsipController extends Controller
                         File::move($file_path_old, public_path()."/upload/$tahun/$jenis/$namaFileOld");
                     }
                     $arsip->update($validateData);
-                    return redirect()->route('arsip.index')->with('success', 'Data berhasil diubah');
+                    return redirect()->route('arsip.data')->with('success', 'Data berhasil diubah');
                 }else{
                     $arsip->update($validateData);
-                    return redirect()->route('arsip.index')->with('success', 'Data berhasil diubah');
+                    return redirect()->route('arsip.data')->with('success', 'Data berhasil diubah');
                 }
             }
         }else{
@@ -268,7 +268,7 @@ class ArsipController extends Controller
                     $request->file_arsip->move(public_path()."/upload/$tahun/". $jenis, $namaFile);
                     $validateData['file_arsip'] = $namaFile;
                     $arsip->update($validateData);
-                    return redirect()->route('arsip.index')->with('success', 'Data berhasil diubah');
+                    return redirect()->route('arsip.data')->with('success', 'Data berhasil diubah');
                 }else {
                     if ($request->jenis_id != $arsip->jenis_id || $request ->tahun != $arsip->tahun) {
                         $namaFileOld = $arsip->file_arsip;
@@ -289,10 +289,10 @@ class ArsipController extends Controller
                             File::move($file_path_old, public_path()."/upload/$tahun/$jenis/$namaFileOld");
                         }
                         $arsip->update($validateData);
-                        return redirect()->route('arsip.index')->with('success', 'Data berhasil diubah');
+                        return redirect()->route('arsip.data')->with('success', 'Data berhasil diubah');
                     }else{
                         $arsip->update($validateData);
-                        return redirect()->route('arsip.index')->with('success', 'Data berhasil diubah');
+                        return redirect()->route('arsip.data')->with('success', 'Data berhasil diubah');
                     }
                 }
             
