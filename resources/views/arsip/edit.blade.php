@@ -106,14 +106,12 @@
                 </div>
             </div>
             <div class="row mt-2">
-                <div class="col-6">
-                    <label for="uraian_arsip">Uraian</label>
-                    <textarea class="form-control" name="uraian_arsip" id="uraian_arsip" cols="30" rows="5"
-                        required>{{ old('uraian_arsip') ?? $arsip->uraian_arsip }}</textarea>
-                    @error('uraian_arsip')
-                    <div class="text-danger mt-2 d-block">{{ $message }}</div>
-                    @enderror
-                </div>
+                <label for="uraian_arsip">Uraian</label>
+                <textarea class="form-control" name="uraian_arsip" id="uraian_arsip" cols="30" rows="5"
+                    required>{{ old('uraian_arsip') ?? $arsip->uraian_arsip }}</textarea>
+                @error('uraian_arsip')
+                <div class="text-danger mt-2 d-block">{{ $message }}</div>
+                @enderror
             </div>
 
             <input type="hidden" name="user_id" id="user_id" value="{{ $arsip->user_id }}">
