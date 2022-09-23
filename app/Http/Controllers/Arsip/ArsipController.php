@@ -195,7 +195,110 @@ class ArsipController extends Controller
             'user_id' => 'required',
         ]);
 
-        
+          //super admnin & admin
+        if (Auth::user()->roles->pluck('name')->contains('super admin') || Auth::user()->roles->pluck('name')->contains('admin')) {
+            if ($request->hasFile('file_arsip')) {
+                $namaFileOld = $arsip->file_arsip;
+                $tahunOld = $arsip->tahun;
+                $jenisOld = $arsip->jenis->name;
+
+                $datas = Struktural_detail::where('id', $arsip->id_pencipta_arsip)->first()->name;
+                
+
+                $tahun = $request->tahun;
+                $jenis = Jenis::where('id', $request->jenis_id)->first()->name;
+                $namaFile = str_replace(' ', '-', $datas).'-'.str_replace(' ', '-',$request->file_arsip->getClientOriginalName());
+
+                $file_path_old = public_path()."/upload/$tahunOld/$jenisOld/$namaFileOld";
+                unlink($file_path_old);
+                $request->file_arsip->move(public_path()."/upload/$tahun/". $jenis, $namaFile);
+                $validateData['file_arsip'] = $namaFile;
+                $arsip->update($validateData);
+                return redirect()->route('arsip.index')->with('success', 'Data berhasil diubah');
+                
+            }else{
+                //echo "update tidak punya gambar";
+                //jika ganti jenis dan tahun
+                if ($request->jenis_id != $arsip->jenis_id || $request ->tahun != $arsip->tahun) {
+                    $namaFileOld = $arsip->file_arsip;
+                    $tahunOld = $arsip->tahun;
+                    $jenisOld = $arsip->jenis->name;
+
+                    $tahun = $request->tahun;
+                    $jenis = Jenis::where('id', $request->jenis_id)->first()->name;
+
+                    $file_path_old = public_path()."/upload/$tahunOld/$jenisOld/$namaFileOld";
+                    $file_path_new = public_path()."/upload/$tahun/$jenis/$namaFileOld";
+
+                    if (!File::exists($file_path_new)) {
+                        File::makeDirectory(public_path()."/upload/$tahun/$jenis", 0777, true, true);
+                        File::move($file_path_old, public_path()."/upload/$tahun/$jenis/$namaFileOld");
+                    }elseif(File::exists($file_path_new)){
+                        File::makeDirectory(public_path()."/upload/$tahun/$jenis", 0777, true);
+                        File::move($file_path_old, public_path()."/upload/$tahun/$jenis/$namaFileOld");
+                    }
+                    $arsip->update($validateData);
+                    return redirect()->route('arsip.index')->with('success', 'Data berhasil diubah');
+                }else{
+                    $arsip->update($validateData);
+                    return redirect()->route('arsip.index')->with('success', 'Data berhasil diubah');
+                }
+            }
+        }else{
+            //keamanan url untuk user agar tidak bisa akses id
+            $id = Auth::user()->id;
+            if ($id != $arsip->user_id) {
+                    abort(404);
+            }else{
+                //echo "proses user disini";
+                if ($request->hasFile('file_arsip')) {
+                    $namaFileOld = $arsip->file_arsip;
+                    $tahunOld = $arsip->tahun;
+                    $jenisOld = $arsip->jenis->name;
+
+                    $datas = Struktural_detail::where('id', $request->id_pencipta_arsip)->first()->name;
+                   
+
+                    $tahun = $request->tahun;
+                    $jenis = Jenis::where('id', $request->jenis_id)->first()->name;
+                    $namaFile = str_replace(' ', '-', $datas).'-'.str_replace(' ', '-',$request->file_arsip->getClientOriginalName());
+
+                    $file_path_old = public_path()."/upload/$tahunOld/$jenisOld/$namaFileOld";
+                    unlink($file_path_old);
+                    $request->file_arsip->move(public_path()."/upload/$tahun/". $jenis, $namaFile);
+                    $validateData['file_arsip'] = $namaFile;
+                    $arsip->update($validateData);
+                    return redirect()->route('arsip.index')->with('success', 'Data berhasil diubah');
+                }else {
+                    if ($request->jenis_id != $arsip->jenis_id || $request ->tahun != $arsip->tahun) {
+                        $namaFileOld = $arsip->file_arsip;
+                        $tahunOld = $arsip->tahun;
+                        $jenisOld = $arsip->jenis->name;
+
+                        $tahun = $request->tahun;
+                        $jenis = Jenis::where('id', $request->jenis_id)->first()->name;
+
+                        $file_path_old = public_path()."/upload/$tahunOld/$jenisOld/$namaFileOld";
+                        $file_path_new = public_path()."/upload/$tahun/$jenis/$namaFileOld";
+
+                        if (!File::exists($file_path_new)) {
+                            File::makeDirectory(public_path()."/upload/$tahun/$jenis", 0777, true, true);
+                            File::move($file_path_old, public_path()."/upload/$tahun/$jenis/$namaFileOld");
+                        }elseif(File::exists($file_path_new)){
+                            File::makeDirectory(public_path()."/upload/$tahun/$jenis", 0777, true);
+                            File::move($file_path_old, public_path()."/upload/$tahun/$jenis/$namaFileOld");
+                        }
+                        $arsip->update($validateData);
+                        return redirect()->route('arsip.index')->with('success', 'Data berhasil diubah');
+                    }else{
+                        $arsip->update($validateData);
+                        return redirect()->route('arsip.index')->with('success', 'Data berhasil diubah');
+                    }
+                }
+            
+            }
+        }
+    
     }
 
     public function destroy(Arsip $arsip)
