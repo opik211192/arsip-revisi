@@ -117,6 +117,9 @@
                 <label for="file_arsip">Unggah File</label>
                 <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     name="file_arsip" id="file_arsip" class="form-control">
+                @error('file_arsip')
+                <div class="text-danger mt-2 d-block">{{ $message }}</div>
+                @enderror
             </div>
 
             <input type="hidden" name="user_id" id="user_id" value="{{ $user->id }}">
