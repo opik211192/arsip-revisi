@@ -83,6 +83,9 @@
                     <div class="text-danger mt-2 d-block">{{ $message }}</div>
                     @enderror
                 </div>
+
+            </div>
+            <div class="row mt-3">
                 <div class="col">
                     <label for="tahun">Tahun</label>
                     <select name="tahun" id="tahun" class="form-control" required>
@@ -92,29 +95,31 @@
                             @endfor
                     </select>
                 </div>
+                <div class="col">
+                    <label for="file_arsip">Unggah File</label>
+                    <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        name="file_arsip" id="file_arsip" class="form-control">
+                    <span class="text-danger"><i>Kosongkan jika tidak ubah file</i></span>
+                    @error('file_arsip')
+                    <div class="text-danger mt-2 d-block">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
-            <div class="row mt-3">
-                <label for="uraian_arsip">Uraian</label>
-                <textarea class="form-control" name="uraian_arsip" id="uraian_arsip" cols="30" rows="5"
-                    required>{{ old('uraian_arsip') ?? $arsip->uraian_arsip }}</textarea>
-                @error('uraian_arsip')
-                <div class="text-danger mt-2 d-block">{{ $message }}</div>
-                @enderror
-            </div>
-            <div class="row mt-3">
-                <label for="file_arsip">Unggah File</label>
-                <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                    name="file_arsip" id="file_arsip" class="form-control">
-                <span class="text-danger"><i>Kosongkan jika tidak ubah file</i></span>
-                @error('file_arsip')
-                <div class="text-danger mt-2 d-block">{{ $message }}</div>
-                @enderror
+            <div class="row mt-2">
+                <div class="col-6">
+                    <label for="uraian_arsip">Uraian</label>
+                    <textarea class="form-control" name="uraian_arsip" id="uraian_arsip" cols="30" rows="5"
+                        required>{{ old('uraian_arsip') ?? $arsip->uraian_arsip }}</textarea>
+                    @error('uraian_arsip')
+                    <div class="text-danger mt-2 d-block">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
 
             <input type="hidden" name="user_id" id="user_id" value="{{ $arsip->user_id }}">
-            <div class="row mt-4">
-                <button class="btn btn-primary btn-sm mt-3 mr-2">Simpan</button>
-                <a href="{{ route('arsip.data') }}" class="btn btn-danger btn-sm mt-3 mr-2">Kembali</a>
+            <div class="mt-2">
+                <button class="btn btn-primary btn-sm mt-2">Simpan</button>
+                <a href="{{ route('arsip.data') }}" class="btn btn-danger btn-sm mt-2">Batal</a>
             </div>
         </form>
     </div>
