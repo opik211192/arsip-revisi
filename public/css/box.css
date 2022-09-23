@@ -1,0 +1,48 @@
+/* #sum_box h4 {
+    margin-left: 4px;
+    margin-top: 0px;
+    font-size: 30px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    padding: 10px;
+}
+
+
+#sum_box .db:hover {
+    background: #40516f;
+    color: #fff;
+}
+
+
+.description{
+    margin-left: 4px;
+}
+
+#sum_box .db:hover .icon {
+    opacity: 1;
+    color: #999999;
+}
+
+#sum_box .icon {
+    color: #fff;
+    font-size: 48px;
+    margin-top: 8px;
+    margin-bottom: 0px;
+    margin-right: 3px;
+    float: right;
+    opacity: 1;
+}
+
+
+.panel.income.db.mbm{
+        background-color: #5cb85c;
+}
+
+.panel.profit.db.mbm{
+        background-color: #5bc0de;
+}
+
+
+.panel.task.db.mbm{
+        background-color: #f0ad4e;
+} */
