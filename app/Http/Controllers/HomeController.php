@@ -36,6 +36,21 @@ class HomeController extends Controller
         // $strukturals = Struktural_detail::with('struktural')->get();
         // $models = $strukturals->groupBy('struktural.name');
         //dd($tes);
-        return view('home');
+        // $arsips = DB::select('SELECT a.id_pencipta_arsip, 
+	    //                     COUNT(a.id_pencipta_arsip) AS "jml",
+	    //                     b.name
+        //                     FROM arsips a 
+        //                     LEFT OUTER JOIN struktural_details b ON a.id_pencipta_arsip = b.id 
+        //                     GROUP BY a.id_pencipta_arsip, b.name ');
+        $arsips = DB::select('SELECT a.id,a.name,a.struktural_id,
+                            c.name as "struktural",
+                            COUNT(b.id_pencipta_arsip) AS "jml"
+                            FROM struktural_details a
+                            LEFT OUTER JOIN arsips b ON a.id = b.id_pencipta_arsip
+                            LEFT OUTER JOIN strukturals C ON a.struktural_id = c.id
+                            GROUP BY a.id,a.name,a.struktural_id,b.id_pencipta_arsip,c.name
+                            ');
+        //dd($arsips);
+        return view('home', compact('arsips'));
     }
 }
