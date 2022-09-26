@@ -120,7 +120,7 @@ Route::middleware('has.role')->prefix('xyz')->group(function(){
         Route::put('assignable/{role}/edit', [AssignController::class, 'update']);
 
 
-        //Route untuk user
+        //Route untuk permisiion to user 
         Route::get('assign/user', [UserController::class, 'create'])->name('assign.user.create');
         Route::post('assign/user', [UserController::class, 'store']);
         Route::get('assign/{user}/user', [UserController::class, 'edit'])->name('assign.user.edit');

@@ -12,7 +12,7 @@
 <script>
     $(document).ready(function() {
             $('.select2').select2({
-                placeholder: "Select Permissions"
+                // placeholder: "Select Permissions"
             });
         });
 </script>
@@ -32,9 +32,30 @@
     <div class="card-body">
         <form action="{{ route('assign.user.create') }}" method="post">
             @csrf
+
+            {{-- <div class="form-group">
+                <label for="username">User</label>
+                <select name="username" id="username" class="form-control select2">
+                    <option value="">--Pilih User--</option>
+                    @foreach ($users as $user)
+                    <option value="{{ $user->email }}">{{ $user->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @error('username')
+            <div class="text-danger mt-2 d-block">{{ $message }}</div>
+            @enderror --}}
+
             <div class="form-group">
-                <label for="user">User</label>
-                <input type="text" name="email" id="email" class="form-control">
+                <label for="email">User</label>
+                {{-- <input type="text" name="email" id="email" class="form-control"> --}}
+                <select name="email" id="email" class="form-control select2">
+                    <option value="">--Pilih User--</option>
+                    @foreach ($users as $user)
+                    <option value="{{ $user->email }}">{{ $user->name }}
+                    </option>
+                    @endforeach
+                </select>
             </div>
             @error('email')
             <div class="text-danger mt-2 d-block">{{ $message }}</div>

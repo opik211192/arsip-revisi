@@ -32,8 +32,15 @@
             @method('PUT')
             @csrf
             <div class="form-group">
-                <label for="user">User</label>
-                <input type="text" name="email" id="email" class="form-control" value="{{ $user->email }}">
+                <label for="email">User</label>
+                {{-- <input type="text" name="email" id="email" class="form-control" value="{{ $user->email }}"> --}}
+                <select name="email" id="email" class="form-control">
+                    <option value="" disabled>--Pilih User--</option>
+                    @foreach ($users as $item)
+                    <option {{ $user->email == $item->email ? 'selected' : '' }} value="{{ $item->email }}">{{
+                        $item->name }}</option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="form-group">
