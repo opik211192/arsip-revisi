@@ -10,9 +10,14 @@ class Struktural_detail extends Model
     use HasFactory;
     protected $guarded = [];
 
-    Public function struktural()
+    public function struktural()
     {
         return $this->belongsTo(Struktural::class);
+    }
+
+    public function arsips()
+    {
+        return $this->belongsTo(Arsip::class, 'id', 'id_pencipta_arsip');
     }
 
 }

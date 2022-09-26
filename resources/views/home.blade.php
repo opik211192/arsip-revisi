@@ -6,29 +6,6 @@
 <div></div>
 @stop
 
-@section('styles')
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-@endsection
-
-@push('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script>
-<script>
-  $(document).ready(function() {
-            $('.select2').select2({
-                placeholder: "Select Permissions"
-            });
-        });
-
- $('#data').change(function(){
-    var label=$('#data :selected').parent().attr('label');
-    var sub = $('#data').find(":selected").val();
-    console.log(sub);
-    console.log(label);
- })
-</script>
-
-@endpush
-
 @section('content')
 <div class="card">
   <div class="card-header bg-dark">Dashboard</div>
@@ -37,7 +14,7 @@
       <div class="col">
         <div class="small-box bg-info">
           <div class="inner">
-            <h3>150</h3>
+            <h3>{{ $allArsip }}</h3>
             <p>Data Arsip</p>
           </div>
           <div class="icon">
@@ -49,7 +26,7 @@
       <div class="col">
         <div class="small-box bg-warning">
           <div class="inner">
-            <h3>44</h3>
+            <h3>{{ $allUser }}</h3>
             <p>Data User</p>
           </div>
           <div class="icon">
@@ -64,24 +41,28 @@
         <div class="card card-primary">
           <div class="card-header">Data Arsip Detail</div>
           <div class="card-body">
-            <table class="table">
+            <table class="table table-sm">
               <thead>
                 <tr>
+                  <td><strong>No</strong></td>
                   <td><strong>Struktural</strong></td>
-                  <td></td>
                   <td></td>
                   <td><strong>Jumlah Arsip</strong></td>
                 </tr>
               </thead>
               <tbody>
-                @foreach ($arsips as $arsip)
+                @foreach ($arsips as $index => $arsip)
                 <tr>
-                  <td>{{ $arsip->name }}</td>
-                  <td>{{ $arsip->struktural }}</td>
+                  <td>{{ $arsips->firstItem() + $loop->iteration - 1 }}</td>
+                  <td><strong>{{ $arsip->struktural_detail }}</strong> ({{ $arsip->struktural }})</td>
                   <td>:</td>
                   <td>
                     <h5>
-                      <span class="badge badge-primary right">{{ $arsip->jml }}</span>
+                      @if ($arsip->jml == 0)
+                      <span class="badge badge-danger right">{{ $arsip->jml }}</span>
+                      @else
+                      <span class="badge badge-info right">{{ $arsip->jml }}</span>
+                      @endif
                     </h5>
                   </td>
                 </tr>
@@ -89,26 +70,11 @@
               </tbody>
             </table>
           </div>
+          <div class="row justify-content-center">
+            {{ $arsips->links() }}
+          </div>
         </div>
       </div>
     </div>
   </div>
-
-
-  {{-- <div class="form-group col-md-6">
-    <label for="data">data</label>
-    <select name="data" id="data" class="form-control select2">
-      @foreach ($models as $model => $strukturals)
-      <optgroup id="opt" label="{{ $model }}">
-        @foreach ($strukturals as $s)
-        <option value="{{ $s->id }}">{{ $s->name }}</option>
-        @endforeach
-      </optgroup>
-      @endforeach
-    </select>
-    @error('permissions')
-    <div class="text-danger mt-2 d-block">{{ $message }}</div>
-    @enderror
-  </div>
-</div> --}}
-@stop
+  @stop
