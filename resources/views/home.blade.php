@@ -15,7 +15,7 @@
         <div class="small-box bg-info">
           <div class="inner">
             <h3>{{ $allArsip }}</h3>
-            <p>Data Arsip</p>
+            <p>Data Arsip Balai</p>
           </div>
           <div class="icon">
             <i class="fas fa-solid fa-book"></i>
