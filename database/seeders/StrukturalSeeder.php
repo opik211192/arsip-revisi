@@ -18,6 +18,10 @@ class StrukturalSeeder extends Seeder
             'name' => 'Balai Besar Wilayah Sungai Citanduy',
         ]);
 
+        Struktural::create([
+            'name' => 'Bagian Umum dan Tata Usaha',
+        ]);
+
          Struktural::create([
             'name' => 'Bidang Keterpaduan Pembangunan Infrastruktur Sumber Daya Air',
         ]);
