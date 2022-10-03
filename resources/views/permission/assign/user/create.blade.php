@@ -33,7 +33,7 @@
         <form action="{{ route('assign.user.create') }}" method="post">
             @csrf
 
-            {{-- <div class="form-group">
+            <div class="form-group">
                 <label for="username">User</label>
                 <select name="username" id="username" class="form-control select2">
                     <option value="">--Pilih User--</option>
@@ -44,9 +44,9 @@
             </div>
             @error('username')
             <div class="text-danger mt-2 d-block">{{ $message }}</div>
-            @enderror --}}
+            @enderror
 
-            <div class="form-group">
+            {{-- <div class="form-group">
                 <label for="email">User</label>
                 {{-- <input type="text" name="email" id="email" class="form-control"> --}}
                 <select name="email" id="email" class="form-control select2">
@@ -59,7 +59,7 @@
             </div>
             @error('email')
             <div class="text-danger mt-2 d-block">{{ $message }}</div>
-            @enderror
+            @enderror --}}
 
             <div class="form-group">
                 <label for="roles">Pick Roles</label>

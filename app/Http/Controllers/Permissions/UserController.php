@@ -12,7 +12,9 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::get();
-        $users = User::has('roles')->get();
+        //$users = User::has('roles')->get();
+        $users = User::all();
+
         return view('permission.assign.user.create', compact('roles', 'users'));
     }
 

@@ -64,7 +64,7 @@ class ArsipController extends Controller
         // simpan arsip ke database
         Arsip::create($validateData);
 
-        return redirect()->route('arsip.index')->with('success', 'Data berhasil ditambahkan');
+        return redirect()->route('arsip.data')->with('success', 'Data berhasil ditambahkan');
        
     }
 
