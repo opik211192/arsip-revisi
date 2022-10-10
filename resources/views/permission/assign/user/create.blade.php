@@ -34,8 +34,8 @@
             @csrf
 
             <div class="form-group">
-                <label for="username">User</label>
-                <select name="username" id="username" class="form-control select2">
+                <label for="email">User</label>
+                <select name="email" id="email" class="form-control select2">
                     <option value="">--Pilih User--</option>
                     @foreach ($users as $user)
                     <option value="{{ $user->email }}">{{ $user->name }}</option>
@@ -45,21 +45,6 @@
             @error('username')
             <div class="text-danger mt-2 d-block">{{ $message }}</div>
             @enderror
-
-            {{-- <div class="form-group">
-                <label for="email">User</label>
-                {{-- <input type="text" name="email" id="email" class="form-control"> --}}
-                <select name="email" id="email" class="form-control select2">
-                    <option value="">--Pilih User--</option>
-                    @foreach ($users as $user)
-                    <option value="{{ $user->email }}">{{ $user->name }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-            @error('email')
-            <div class="text-danger mt-2 d-block">{{ $message }}</div>
-            @enderror --}}
 
             <div class="form-group">
                 <label for="roles">Pick Roles</label>
