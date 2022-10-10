@@ -7,8 +7,9 @@ use App\Models\Struktural;
 use Illuminate\Http\Request;
 use App\Models\Struktural_detail;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 
 class UserDataController extends Controller
@@ -79,66 +80,110 @@ class UserDataController extends Controller
         //dd($get);
     }
 
-    public function update(Request $request, User $user)
-    {
-        request()->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
-            'username' => 'required',
-            'struktural_id' => 'required',
-            'struktural_detail_id' => 'required',
-        ]);
+    // public function update(Request $request, User $user)
+    // {
+    //     request()->validate([
+    //         'name' => 'required|string|max:255',
+    //         'email' => 'required|string|email|max:255',
+    //         'username' => 'required',
+    //         'struktural_id' => 'required',
+    //         'struktural_detail_id' => 'required',
+    //     ]);
 
         
-        //ambil password user
-        $hashedPassword = $user->password;
+    //     //ambil password user
+    //     $hashedPassword = $user->password;
 
-        //validasi jika ganti password
-        if($request->oldpassword){  
-            //validasi cek oassword 
-            if (\Hash::check($request->oldpassword, $hashedPassword)) {
-                if (!Hash::check($request->newpassword, $hashedPassword)) {
-                    // $users = Auth::user()->id;
-                    // $users->password = bcrypt($request->newpassword);
-                    // User::where('id', Auth::user()->id)->update( array(
-                    //     'password' => $users->password
-                    // ));
-                    //simppan perubahan dengan password baru
-                    $user->update([
-                        'name' => $request->name,
-                        'email' => $request->email,
-                        'username' => $request->username,
-                        'password' => bcrypt($request->newpassword),
-                        'struktural_id' => $request->struktural_id,
-                        'struktural_detail_id' => $request->struktural_detail_id,
+    //     //validasi jika ganti password
+    //     if($request->oldpassword){  
+    //         //validasi cek oassword 
+    //         if (\Hash::check($request->oldpassword, $hashedPassword)) {
+    //             if (!Hash::check($request->newpassword, $hashedPassword)) {
+    //                 // $users = Auth::user()->id;
+    //                 // $users->password = bcrypt($request->newpassword);
+    //                 // User::where('id', Auth::user()->id)->update( array(
+    //                 //     'password' => $users->password
+    //                 // ));
+    //                 //simppan perubahan dengan password baru
+    //                 $user->update([
+    //                     'name' => $request->name,
+    //                     'email' => $request->email,
+    //                     'username' => $request->username,
+    //                     'password' => bcrypt($request->newpassword),
+    //                     'struktural_id' => $request->struktural_id,
+    //                     'struktural_detail_id' => $request->struktural_detail_id,
                        
-                    ]);
-                    return redirect()->route('user.data')->with('success', 'Berhasil Ganti password');
-                }
-                else {
-                    //echo "new password can not be the old password!";
-                    return back()->with('error', 'new password can not be the old password!');
-                }
-            }
-            else {
-                //echo "Old Password dosent matched";
-                return back()->with('error', 'Old password doesnt matched');
-            }
-        }else{
+    //                 ]);
+    //                 return redirect()->route('user.data')->with('success', 'Berhasil Ganti password');
+    //             }
+    //             else {
+    //                 //echo "new password can not be the old password!";
+    //                 return back()->with('error', 'new password can not be the old password!');
+    //             }
+    //         }
+    //         else {
+    //             //echo "Old Password dosent matched";
+    //             return back()->with('error', 'Old password doesnt matched');
+    //         }
+    //     }else{
 
-            //simpan data tanpa ubah paswword
+    //         //simpan data tanpa ubah paswword
+    //         $user->update([
+    //             'name' => request('name'),
+    //             'email' => request('email'),
+    //             'username' => request('username'),
+    //             'struktural_id' => request('struktural_id'),
+    //             'struktural_detail_id' => request('struktural_detail_id'),
+    //         ]);
+    //         //echo "berhasil update tanpa isi password";
+    //         return redirect()->route('user.data')->with('success', 'Berhasil update data');
+    //     }
+
+    // }
+
+    public function update(Request $request, User $user)
+    {
+        //dd($user->id);
+        // dd($user->password);
+         $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+        ]);
+
+        if ($request->oldpassword) {
+            if (!Hash::check($request->get('oldpassword'), $user->password)) {
+                return redirect()->back()->with("error","Password saat ini tidak cocok dengan password baru, silahkan coba lagi");
+            }
+
+            if (strcmp($request->get('oldpassword'), $request->get('newpassword')) == 0) {
+                 return redirect()->back()->with("error","Password baru tidak boleh sama dengan password saat ini");
+            }
+
             $user->update([
-                'name' => request('name'),
-                'email' => request('email'),
-                'username' => request('username'),
-                'struktural_id' => request('struktural_id'),
-                'struktural_detail_id' => request('struktural_detail_id'),
+                'name' => $request->name,
+                'email' => $request->email,
+                'username' => $request->username,
+                'password' => bcrypt($request->get('newpassword')),
+                'struktural_id' => $request->struktural_id,
+                'struktural_detail_id' => $request->struktural_detail_id,
+                       
             ]);
-            //echo "berhasil update tanpa isi password";
-            return redirect()->route('user.data')->with('success', 'Berhasil update data');
+
+            return redirect()->back()->with("success","Data/password berhasil diubah");
         }
 
+        $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'username' => $request->username,
+                'struktural_id' => $request->struktural_id,
+                'struktural_detail_id' => $request->struktural_detail_id,
+                       
+            ]);
+        return redirect()->back()->with("success","Data Berhasil diubah");
+        
     }
+
 
     public function delete(User $user)
     {

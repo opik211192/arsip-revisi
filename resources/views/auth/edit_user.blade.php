@@ -90,13 +90,16 @@
 
                                 <div class="col-md-6">
                                     <select name="struktural_id" id="struktural_id" class="form-control">
-                                        <option value="{{ old('struktural_id') }}" selected disabled>Pilih Struktural
-                                        </option>
-                                        @foreach ($strukturals as $item)
+                                        {{-- <option value="{{ old('struktural_id') }}" selected disabled>Pilih
+                                            Struktural
+                                        </option> --}}
+                                        {{-- @foreach ($strukturals as $item)
                                         <option {{ $struktur[0]->struktural_id == $item->id ? 'selected' : ''}}
                                             value="{{
                                             $item->id }}">{{ $item->name }}</option>
-                                        @endforeach
+                                        @endforeach --}}
+                                        <option value="{{ $user->struktural_id }}">{{ $user->struktural->name }}
+                                        </option>
                                     </select>
                                     @error('struktural')
                                     <span class="invalid-feedback" role="alert">
@@ -111,18 +114,21 @@
                                 </label>
                                 <div class="col-md-6">
                                     <select name="struktural_detail_id" id="struktural_detail_id" class="form-control">
-                                        <option value="{{ old('struktural_detail_id') }}" selected disabled>Pilih Sub
-                                        </option>
-                                        @foreach ($get_struktural_detail as $item)
+                                        {{-- <option value="{{ old('struktural_detail_id') }}" selected disabled>Pilih
+                                            Sub
+                                        </option> --}}
+                                        {{-- @foreach ($get_struktural_detail as $item)
                                         <option {{ $struktur[0]->struktural_detail_id == $item->id ? 'selected': '' }}
                                             value="{{ $item->id }}">{{ $item->name }}</option>
-                                        @endforeach
+                                        @endforeach --}}
+                                        <option value="{{ $user->struktural_detail_id }}">{{
+                                            $user->struktural_detail->name }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="card mt-4 border-danger">
-                                <div class="card-header bg-danger text-white">
+                                <div class="card-header bg-warning text-white">
                                     <i>Kosongkan jika tidak ubah password</i>
                                 </div>
                                 <div class="card-body">
@@ -161,12 +167,13 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{
+                                        <label for="newpassword-confirm"
+                                            class="col-md-4 col-form-label text-md-right">{{
                                             __('Confirm Password') }}</label>
 
                                         <div class="col-md-6">
-                                            <input id="password-confirm" type="password" class="form-control"
-                                                name="password_confirmation">
+                                            <input id="newpassword-confirm" type="password" class="form-control"
+                                                name="newpassword_confirmation">
                                         </div>
                                     </div>
                                 </div>
@@ -209,4 +216,11 @@
     });
 
 </script>
+{{-- <script>
+    $(document).ready(function () {
+        $('#struktural_id').prop('disabled', true);
+        $('#struktural_detail_id').prop('disabled', true );
+        return false;
+    });
+</script> --}}
 @endpush

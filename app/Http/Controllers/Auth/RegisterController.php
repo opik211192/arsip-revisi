@@ -10,6 +10,7 @@ use App\Models\Struktural;
 use App\Models\Struktural_detail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+
 use Illuminate\Auth\Events\Registered;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
@@ -199,7 +200,8 @@ class RegisterController extends Controller
         }
 
     }
-
+    
+    
     public function delete(User $user)
     {
         $user->delete();
