@@ -143,8 +143,6 @@ class UserDataController extends Controller
 
     public function update(Request $request, User $user)
     {
-        //dd($user->id);
-        // dd($user->password);
          $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
@@ -192,7 +190,6 @@ class UserDataController extends Controller
     }
 
     public function ambilData(Request $request)
-
     {
 
         $struktur = Struktural_detail::where('struktural_id', $request->get('id'))->pluck('name', 'id');
