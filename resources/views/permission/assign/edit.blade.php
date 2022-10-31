@@ -46,13 +46,26 @@
             </div>
 
             <div class="form-group">
-                <label for="permissions">Permissions</label>
-                <select name="permissions[]" id="permissions" class="form-control select2" multiple>
+                <label class="mr-3" for="permissions">Permissions</label>
+                {{-- <select name="permissions[]" id="permissions" class="form-control select2" multiple>
                     @foreach ($permissions as $permission)
                     <option {{ $role->permissions()->find($permission->id) ? 'selected' : '' }} value="{{
                         $permission->id }}">{{ $permission->name }}</option>
                     @endforeach
-                </select>
+                </select> --}}
+                <div class="row">
+                    <div class="col-md-6">
+
+                        @foreach ($permissions as $permission)
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" id="permissions" name="permissions[]"
+                                value="{{ $permission->id }}" @if($role->permissions->contains($permission)) checked
+                            @endif>
+                            <label class="form-check-label">{{ $permission->name}}</label>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
                 @error('permissions')
                 <div class="text-danger mt-2 d-block">{{ $message }}</div>
                 @enderror

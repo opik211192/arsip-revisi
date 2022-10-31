@@ -30,6 +30,7 @@ class AssignController extends Controller
         $role->givePermissionTo(request('permissions'));
 
         return back()->with('success', "Permission has been assign to the role {$role->name}");
+        //dd($role);
         
     }
 
