@@ -44,13 +44,25 @@
             </div>
 
             <div class="form-group">
-                <label for="roles">Pick Roles</label>
-                <select name="roles[]" id="roles" class="form-control select2" multiple>
+                <label class="mr-3">Pick Roles</label>
+                {{-- <select name="roles[]" id="roles" class="form-control select2" multiple>
                     @foreach ($roles as $role)
                     <option {{ $user->roles()->find($role->id) ? 'selected' : '' }} value="{{ $role->id }}">{{
                         $role->name }}</option>
                     @endforeach
-                </select>
+                </select> --}}
+                <div class="row">
+                    <div class="col-md-6">
+                        @foreach ($roles as $role)
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" id="roles" name="roles[]"
+                                value="{{ $role->id }}" @if($user->roles->contains($role)) checked
+                            @endif>
+                            <label class="form-check-label">{{ $role->name }}</label>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
             </div>
 
             <button type="submit" class="btn btn-secondary">Sync</button>

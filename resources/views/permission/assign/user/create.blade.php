@@ -32,7 +32,6 @@
     <div class="card-body">
         <form action="{{ route('assign.user.create') }}" method="post">
             @csrf
-
             <div class="form-group">
                 <label for="email">User</label>
                 <select name="email" id="email" class="form-control select2">
@@ -47,12 +46,24 @@
             @enderror
 
             <div class="form-group">
-                <label for="roles">Pick Roles</label>
-                <select name="roles[]" id="roles" class="form-control select2" multiple>
+                <label class="mr-3">Pick Roles</label>
+                {{-- <select name="roles[]" id="roles" class="form-control select2" multiple>
                     @foreach ($roles as $role)
                     <option value="{{ $role->id }}">{{ $role->name }}</option>
                     @endforeach
-                </select>
+                </select> --}}
+                <div class="row">
+                    <div class="col-md-6">
+                        @foreach ($roles as $role)
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" id="roles" name="roles[]"
+                                value="{{ $role->id }}">
+                            <label class="form-check-label">{{ $role->name }}</label>
+                        </div>
+                        @endforeach
+
+                    </div>
+                </div>
             </div>
             @error('roles')
             <div class="text-danger mt-2 d-block">{{ $message }}</div>
