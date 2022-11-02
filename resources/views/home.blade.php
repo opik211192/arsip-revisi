@@ -159,7 +159,7 @@
             <div class="small-box bg-secondary">
               <div class="inner">
                 <h3>{{ $countArsip[8]->jumlah }}</h3>
-                <p>Data Arsip SNVT Pembangunan Bendungan</p>
+                <p>Data Arsip SNVT PJPA Citanduy</p>
               </div>
               <div class="icon">
                 <i class="fas fa-solid fa-book"></i>
@@ -168,6 +168,16 @@
             </div>
           </div>
           <div class="col-4">
+            <div class="small-box bg-secondary">
+              <div class="inner">
+                <h3>{{ $countArsip[9]->jumlah }}</h3>
+                <p>Data Arsip SNVT Pembangunan Bendungan</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-solid fa-book"></i>
+              </div>
+              <div class="small-box-footer"></div>
+            </div>
           </div>
         </div>
       </div>

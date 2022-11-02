@@ -64,7 +64,6 @@
                     </div>
                 </div>
             </div>
-
             <button type="submit" class="btn btn-secondary">Sync</button>
         </form>
     </div>
