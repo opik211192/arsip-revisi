@@ -26,17 +26,17 @@ class StrukturalDetailSeeder extends Seeder
 
         Struktural_detail::create([
             'struktural_id' => 2,
-            'name' => 'Subbagian Kepegawaian, Arsip, dan Layanan Umum',
+            'name' => 'Subkor Kepegawaian, Arsip, dan Layanan Umum',
         ]);
 
         Struktural_detail::create([
             'struktural_id' => 2,
-            'name' => 'Subbagian Keuangan dan Pengelolaan BMN',
+            'name' => 'Subkor Keuangan dan Pengelolaan BMN',
         ]);
 
         Struktural_detail::create([
             'struktural_id' => 2,
-            'name' => 'Subbagian Hukum dan Komunitas Publik',
+            'name' => 'Subkor Hukum dan Komunitas Publik',
         ]);
 
         Struktural_detail::create([
@@ -46,12 +46,12 @@ class StrukturalDetailSeeder extends Seeder
 
         Struktural_detail::create([
             'struktural_id' => 3,
-            'name' => 'Subbagian Program',
+            'name' => 'Subkor Program',
         ]);
 
         Struktural_detail::create([
             'struktural_id' => 3,
-            'name' => 'Subbagian Perencanaan Umum',
+            'name' => 'Subkor Perencanaan Umum',
         ]); 
 
          Struktural_detail::create([
@@ -61,12 +61,12 @@ class StrukturalDetailSeeder extends Seeder
 
         Struktural_detail::create([
             'struktural_id' => 4,
-            'name' => 'Subbagian PJSA',
+            'name' => 'Subkor PJSA',
         ]);
 
         Struktural_detail::create([
             'struktural_id' => 4,
-            'name' => 'Subbagian PJPA',
+            'name' => 'Subkor PJPA',
         ]);
 
          Struktural_detail::create([
@@ -76,12 +76,12 @@ class StrukturalDetailSeeder extends Seeder
 
         Struktural_detail::create([
             'struktural_id' => 5,
-            'name' => 'Subbagian Perencanaan OP',
+            'name' => 'Subkor Perencanaan OP',
         ]);
 
         Struktural_detail::create([
             'struktural_id' => 5,
-            'name' => 'Subbagian Pelaksanaan OP',
+            'name' => 'Subkor Pelaksanaan OP',
         ]);
 
         Struktural_detail::create([
