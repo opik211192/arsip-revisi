@@ -21,7 +21,7 @@
     {{-- Logo --}}
     <div class="{{ $auth_type ?? 'login' }}-logo">
         <a href="{{ $dashboard_url }}">
-            <img src="{{ asset('img/login.png') }}" height="50">
+            <img src="{{ asset('public/img/login.png') }}" height="50">
             <h3>ARSIP MANAGEMENT</h3>
         </a>
     </div>
