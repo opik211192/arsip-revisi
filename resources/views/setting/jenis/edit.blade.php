@@ -7,13 +7,13 @@
 @stop
 @section('content')
 <div class="card mb-4">
-    <div class="card-header mystyle">Edit Jenis</div>
+    <div class="card-header mystyle">Edit Jenis Klasifikasi</div>
     <div class="card-body">
         <form action="{{ route('jenis.edit', $jenis) }}" method="post">
             @csrf
             @method('PUT')
             <div class="form-group">
-                <label for="name">Jenis Arsip</label>
+                <label for="name">Jenis Klasifikasi</label>
                 <input type="text" class="form-control" name="name" id="name" value="{{ old('name') ?? $jenis->name }}">
             </div>
             <div class="form-group">

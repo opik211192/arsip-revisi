@@ -13,12 +13,12 @@
 @endif
 
 <div class="card mb-3">
-    <div class="card-header mystyle">Tambah Jenis</div>
+    <div class="card-header mystyle">Tambah Jenis Klasifikasi</div>
     <div class="card-body">
         <form action="{{ route('jenis.create') }}" method="post">
             @csrf
             <div class="form-group">
-                <label for="role">Nama Jenis Arsip</label>
+                <label for="role">Nama Jenis Klasifikasi</label>
                 <input type="text" class="form-control" id="name" name="name">
                 @error('jenis')
                 <div class="text-danger mt-2 d-block">{{ $message }}</div>
@@ -37,12 +37,12 @@
 </div>
 
 <div class="card">
-    <div class="card-header text-white mystyle">Data Jenis Arsip</div>
+    <div class="card-header text-white mystyle">Data Jenis Klasifikasi</div>
     <div class="card-body">
         <table class="table table-striped">
             <tr>
                 <th>#</th>
-                <th>Nama Jenis</th>
+                <th>Nama Jenis Klasifikasi</th>
                 <th>Keterangan</th>
                 <th>Action</th>
             </tr>
