@@ -317,7 +317,7 @@ return [
                     'route'     => 'struktural.index',
                 ],
                 [
-                    'text'    => 'Jenis Arsip',
+                    'text'    => 'Jenis Klasifikasi',
                     'route'     => 'jenis.index',
                 ],
             ],
