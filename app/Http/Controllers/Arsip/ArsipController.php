@@ -70,9 +70,12 @@ class ArsipController extends Controller
 
     public function data(Request $request)  
     {
+                    $arsip = Arsip::query()->with(['user','jenis', 'jenis_arsip', 'struktural_detail'])->latest();
+
         // <a href="{{ route('arsip.download', $data) }}"
         //                         class="btn btn-sm btn-success ml-2" xdata-toggle="tooltip" data-placement="top"
         //                         title="Download"><i class="fa fa-download" aria-hidden="true"></i></a>
+        
         //ambil id user
         $user = Auth::user()->struktural_detail_id;
         //jika user super admin 

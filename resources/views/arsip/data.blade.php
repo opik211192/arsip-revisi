@@ -30,6 +30,7 @@ Auth::user()->roles->pluck('name')->contains('admin'))
                     <th>Lokasi</th>
                     <th>Pencipta Arsip</th>
                     <th>Pengunggah</th>
+                    <th>Tgl. Unggah</th>
                     <th>Act</th>
                 </tr>
             </thead>
@@ -61,6 +62,7 @@ Auth::user()->roles->pluck('name')->contains('admin'))
               {data: 'lokasi_arsip', name: 'lokasi_arsip'},
               {data: 'struktural_detail.name'},
               {data: 'user.name', name: 'user.name'},
+              {data: 'created_at', name: 'created_at'},
               {
                   data: 'action', 
                   name: 'action', 
