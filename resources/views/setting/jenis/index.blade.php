@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Jenis Arsip')
+@section('title', 'Jenis Klasifikasi')
 
 @section('content_header')
 <div></div>

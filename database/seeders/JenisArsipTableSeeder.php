@@ -33,5 +33,9 @@ class JenisArsipTableSeeder extends Seeder
         JenisArsip::create([
             'name' => 'Terjaga',
         ]);
+
+         JenisArsip::create([
+            'name' => 'Usul Musnah',
+        ]);
     }
 }

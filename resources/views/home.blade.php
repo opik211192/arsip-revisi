@@ -60,6 +60,25 @@
       <div class="col-12">
         <div class="row">
           <div class="col-4">
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>{{ $countArsip[0]->jumlah }}</h3>
+                <p>Data Arsip Kepala Balai Besar Wilayah Sungai Citanduy</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-solid fa-book"></i>
+              </div>
+              <div class="small-box-foter"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-12">
+        <div class="row">
+          <div class="col-4">
             <div class="small-box bg-primary">
               <div class="inner">
                 <h3>{{ $countArsip[1]->jumlah }}</h3>

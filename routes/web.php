@@ -16,6 +16,7 @@ use App\Http\Controllers\StrukturalController;
 use App\Http\Controllers\Arsip\ArsipController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\JenisArsipController;
 use App\Http\Controllers\Permissions\RoleController;
 use App\Http\Controllers\Permissions\UserController;
 use App\Http\Controllers\Permissions\AssignController;
@@ -76,12 +77,20 @@ Route::middleware('has.role')->prefix('xyz')->group(function(){
     });
 
     //Route untuk setting jenis arsip
-    Route::prefix('setting-jenis-arsip')->group(function(){
+    Route::prefix('setting-jenis-klasifikasi')->group(function(){
         Route::get('', [JenisController::class, 'index'])->name('jenis.index');
         Route::post('/create', [JenisController::class, 'store'])->name('jenis.create');
         Route::get('/{jenis}/edit', [JenisController::class, 'edit'])->name('jenis.edit');
         Route::put('{jenis}/edit', [JenisController::class, 'update']);
         Route::delete('/{jenis}', [JenisController::class, 'delete'])->name('jenis.delete');
+    });
+
+    Route::prefix('setting-jenis-arsip')->group(function(){
+        Route::get('', [JenisArsipController::class, 'index'])->name('jenis_arsip.index');
+        Route::post('/create', [JenisArsipController::class, 'store'])->name('jenis_arsip.create');
+        Route::get('/{jenisArsip}/edit', [JenisArsipController::class, 'edit'])->name('jenis_arsip.edit');
+        Route::put('{jenisArsip}/edit', [JenisArsipController::class, 'update']);
+        Route::delete('/{jenisArsip}', [JenisArsipController::class, 'delete'])->name('jenis_arsip.delete');
     });
 
     //Route untuk setting Unit user

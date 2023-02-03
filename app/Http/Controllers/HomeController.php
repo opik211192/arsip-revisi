@@ -56,7 +56,7 @@ class HomeController extends Controller
                         ->orderBy('strukturals.id')
                         ->get(); 
         //dd($countArsip);
-       
+        //dd($allArsip);
         return view('home', compact('allArsip', 'countArsip'));
     }
 }

@@ -320,6 +320,10 @@ return [
                     'text'    => 'Jenis Klasifikasi',
                     'route'     => 'jenis.index',
                 ],
+                [
+                    'text' => 'Jenis Arsip',
+                    'route' => 'jenis_arsip.index',
+                ],
             ],
         ],
         [
