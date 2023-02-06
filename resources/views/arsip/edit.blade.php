@@ -96,6 +96,7 @@
                     </select>
                 </div>
                 <div class="col">
+                    @if (Auth::user()->hasRole('super admin') || Auth::user()->hasRole('admin'))
                     <label for="file_arsip">Unggah File</label>
                     <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                         name="file_arsip" id="file_arsip" class="form-control">
@@ -103,6 +104,12 @@
                     @error('file_arsip')
                     <div class="text-danger mt-2 d-block">{{ $message }}</div>
                     @enderror
+                    @else
+                    <label for="file_arsip">Unggah File</label>
+                    <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        name="file_arsip" id="file_arsip" class="form-control" disabled>
+                    <span class="text-danger"><i>*Hubungi admin jika ada perubahan pada file unggah</i></span>
+                    @endif
                 </div>
             </div>
             <div class="row mt-2">
