@@ -80,11 +80,134 @@
                         <td>:</td>
                         <td>{{ $data->user->name." (".implode($data->user->getRoleNames()->toarray()).")" }}</td>
                     </tr>
+                    <tr>
+                        <td id="t">Status</td>
+                        <td>:</td>
+                        @if ($data->status == 0)
+                        <td>
+                            <div class="badge badge-warning">Menunggu Konfirmasi</div>
+                        </td>
+                        @elseif ($data->status == 1)
+                        <td>
+                            <div class="badge badge-success">Disetujui</div>
+                        </td>
+                        @elseif ($data->status == 2)
+                        <td>
+                            <div class="badge badge-danger">Koreksi</div>
+                        </td>
+                        @endif
+                    </tr>
+                    @endif
+                    @if (empty($data->keterangan))
+
+                    @else
+                    <tr>
+                        <td><strong><i>Keterangan</i></strong></td>
+                        <td>:</td>
+                        <td style="color: red"><strong><i>{{ $data->keterangan }}</i></strong></td>
+                    </tr>
                     @endif
                 </tbody>
             </table>
-            <button class="btn btn-primary btn-sm mt-3" onclick="history.back()">Kembali</button>
+
+            @if (Auth::user()->hasRole('super admin') || Auth::user()->hasRole('admin'))
+            <button type="button" id="approval" class="btn btn-success btn-sm mt-3" data-toggle="modal"
+                data-target="#exampleModal">
+                Approval
+            </button>
+            @endif
+            <a href="{{ route('arsip.data') }}" class="btn btn-primary btn-sm mt-3">Kembali</a>
+            {{-- <button class="btn btn-primary btn-sm mt-3" onclick="history.back()">Kembali</button> --}}
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form name="frm_edit" id="frm_edit" class="form-horizontal" action="{{ route('arsip.approval', $data) }}"
+            method="POST">
+            @csrf
+            @method('PUT')
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Form Persetujuan Arsip</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" id="status1" value="0" {{
+                            (old('status') ?? $data->status) == '0' ? 'checked' : '' }}>
+                        <label for="status1" class="form-check-label">Menunggu Konfirmasi</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" id="status2" value="1" {{
+                            (old('status') ?? $data->status) == '1' ? 'checked' : '' }}>
+                        <label for="status2" class="form-check-label">Disetujui</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" id="status3" value="2" {{
+                            (old('status') ?? $data->status) == '2' ? 'checked' : '' }}>
+                        <label for="status3" class="form-check-label">Koreksi</label>
+                    </div>
+                    <div>
+                        <textarea class="form-control mt-2" name="keterangan" id="keterangan" cols="10" rows="2"
+                            placeholder="Keterangan Koreksi..."
+                            required>{{ old('keterangan') ?? $data->keterangan }}</textarea>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button onclick="form_submit()" id="btnSubmit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+        </form>
+    </div>
+</div>
 @endsection
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.`0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function(){
+        
+        $('#approval').on('click', function(){
+            var value = $('input[name="status"]:checked').val();
+            if (value === '2') {
+                $('#keterangan').attr('hidden',false);
+            }else{
+                 $('#keterangan').attr('hidden',true);
+            }
+        });
+        
+        $('#keterangan').attr('hidden',true);
+        $('input[type=radio][name=status]').change(function(){
+            if(this.value == '0'){
+                $('#keterangan').attr('hidden',true);
+                $('#keterangan').val('');
+            }else if (this.value == '1'){
+                $('#keterangan').attr('hidden',true);
+                $('#keterangan').val('');
+            }else if(this.value == '2'){
+              
+                $('#keterangan').attr('hidden',false); 
+            }
+        }); 
+        
+        function form_submit() {
+             document.getElementById('frm_edit').submit();
+        }
+
+        $('#btnSubmit').on('click', function(){    
+               form_submit();
+        });
+        
+       
+       
+    })
+    
+</script>
+@endpush

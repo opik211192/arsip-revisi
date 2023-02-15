@@ -315,4 +315,22 @@ class ArsipController extends Controller
         unlink(public_path()."/upload/$tahun/$jenis/$namaFile");
         return redirect()->route('arsip.data')->with('pesan', "Hapus $arsip->nama berhasil");
     }
+
+    //untuk approval
+    public function approval($id)
+    {
+         $data = Arsip::findOrFail($id);
+         return response()->json($data);
+    }
+
+    public function approvalUpdate(Request $request, Arsip $arsip)
+    {
+        $validateData = $request->validate([
+            'status' => '',
+            'keterangan' => '',
+        ]);
+
+        $arsip->update($validateData);
+        return redirect()->route('arsip.detail', $arsip);
+    }
 }

@@ -15,4 +15,10 @@
 
     <a href="{{ route('arsip.download', $id) }}" class="btn btn-success btn-sm" data-toggle="tooltip"
         data-placement="top" title="Download"><i class="fa fa-download" aria-hidden="true"></i></a>&nbsp;
+
+    @if (Auth::user()->roles->pluck('name')->contains('super admin') ||
+    Auth::user()->roles->pluck('name')->contains('admin'))
+    {{-- <a href="{{ route('arsip.approval', $id) }}">tes</a> --}}
+
+    @endif
 </div>

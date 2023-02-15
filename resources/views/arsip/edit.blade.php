@@ -10,9 +10,8 @@
 </div>
 @endif
 
-
-<div class="card mb-4">
-    <div class="card-header text-white" style="background-color: slategray">Edit Arsip</div>
+<div class="card col-md-10">
+    <div class="card-header bg-dark">Create Arsip</div>
     <div class="card-body">
         <form action="{{ route('arsip.edit', $arsip) }}" method="post" enctype="multipart/form-data">
             @csrf

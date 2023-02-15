@@ -72,8 +72,12 @@ Route::middleware('has.role')->prefix('xyz')->group(function(){
         Route::get('/data/{arsip}/detail', [ArsipController::class, 'detail'])->name('arsip.detail');
         Route::get('/data/{arsip}/download', [ArsipController::class, 'download'])->name('arsip.download');
         Route::get('/edit/{arsip}', [ArsipController::class, 'edit'])->name('arsip.edit');
-        Route::put('edit/{arsip}', [ArsipController::class, 'update']);
+        Route::put('/edit/{arsip}', [ArsipController::class, 'update']);
         Route::delete('/data/{arsip}', [ArsipController::class, 'destroy'])->name('arsip.delete');
+        Route::get('/approval/{arsip}', [ArsipController::class, 'approval'])->name('arsip.approval');
+        Route::put('/approval/{arsip}', [ArsipController::class, 'approvalupdate']);
+
+
     });
 
     //Route untuk setting jenis arsip
