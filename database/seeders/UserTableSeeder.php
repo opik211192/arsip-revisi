@@ -18,7 +18,7 @@ class UserTableSeeder extends Seeder
         User::create([
             'name' => 'opik',
             'email' => 'opiktaofik21@gmail.com',
-            'username' => 'admin',
+            'username' => 'superadmin',
             'password' => bcrypt('rahasia123'),
             'struktural_id' => 6,
             'struktural_detail_id' => 19,
@@ -27,9 +27,9 @@ class UserTableSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'fina',
-            'email' => 'fina@gmail.com',
-            'username' => 'fina21',
+            'name' => 'ADMIN',
+            'email' => 'admin@gmail.com',
+            'username' => 'admin',
             'password' => bcrypt('rahasia123'),
              'struktural_id' => 2 ,
             'struktural_detail_id' => 2,
@@ -39,9 +39,9 @@ class UserTableSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'alna',
-            'email' => 'alna@gmail.com',
-            'username' => 'alna21',
+            'name' => 'User ke 1',
+            'email' => 'user1@gmail.com',
+            'username' => 'user1',
             'password' => bcrypt('rahasia123'),
              'struktural_id' => 4,
             'struktural_detail_id' => 10,
@@ -50,9 +50,20 @@ class UserTableSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'taofik',
-            'email' => 'taofik@gmail.com',
-            'username' => 'taofik21',
+            'name' => 'User ke 2',
+            'email' => 'user2@gmail.com',
+            'username' => 'user2',
+            'password' => bcrypt('rahasia123'),
+             'struktural_id' => 6,
+            'struktural_detail_id' => 19,
+            // 'unit_id' => 5,
+            //'struktur_id' => 3,
+        ]);
+
+         User::create([
+            'name' => 'User ke 3',
+            'email' => 'user3@gmail.com',
+            'username' => 'user3',
             'password' => bcrypt('rahasia123'),
              'struktural_id' => 6,
             'struktural_detail_id' => 19,
