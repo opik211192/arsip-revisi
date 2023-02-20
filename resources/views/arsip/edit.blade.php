@@ -11,7 +11,21 @@
 @endif
 
 <div class="card col-md-10">
-    <div class="card-header bg-dark">Create Arsip</div>
+    <div class="card-header bg-dark">
+        <span class="float-left">Edit Arsip</span>
+        <span class="float-right">
+
+            @if ($arsip->status == 0)
+            <small class="badge badge-warning">Menunggu Konfirmasi</small>
+            @elseif ($arsip->status == 1)
+            <small class="badge badge-success">Disetujui</small>
+            @elseif ($arsip->status == 2)
+            <small class="badge badge-danger">Koreksi</small>
+            @endif
+        </span>
+    </div>
+
+
     <div class="card-body">
         <form action="{{ route('arsip.edit', $arsip) }}" method="post" enctype="multipart/form-data">
             @csrf
@@ -95,6 +109,28 @@
                     </select>
                 </div>
                 <div class="col">
+                    {{-- @if (Auth::user()->hasRole('super admin') || Auth::user()->hasRole('admin'))
+                    <label for="file_arsip">Unggah File</label>
+                    <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        name="file_arsip" id="file_arsip" class="form-control">
+                    <span class="text-danger"><i>Kosongkan jika tidak ubah file</i></span>
+                    @error('file_arsip')
+                    <div class="text-danger mt-2 d-block">{{ $message }}</div>
+                    @enderror
+                    @else
+                    @if (!$arsip->status == 1)
+                    <label for="file_arsip">Unggah File</label>
+                    <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        name="file_arsip" id="file_arsip" class="form-control">
+                    <span class="text-danger"><i>Kosongkan jika tidak ubah file</i></span>
+                    @else
+                    <label for="file_arsip">Unggah File</label>
+                    <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        name="file_arsip" id="file_arsip" class="form-control" disabled>
+                    <span class="text-danger"><i>*Hubungi admin jika ada perubahan pada file unggah</i></span>
+                    @endif
+                    @endif --}}
+
                     @if (Auth::user()->hasRole('super admin') || Auth::user()->hasRole('admin'))
                     <label for="file_arsip">Unggah File</label>
                     <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -104,11 +140,20 @@
                     <div class="text-danger mt-2 d-block">{{ $message }}</div>
                     @enderror
                     @else
+                    @if ($arsip->status == 0 || $arsip->status == 2)
+                    <label for="file_arsip">Unggah File</label>
+                    <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        name="file_arsip" id="file_arsip" class="form-control">
+                    <span class="text-danger"><i>Kosongkan jika tidak ubah file</i></span>
+                    @elseif ($arsip->status == 1)
                     <label for="file_arsip">Unggah File</label>
                     <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                         name="file_arsip" id="file_arsip" class="form-control" disabled>
-                    <span class="text-danger"><i>*Hubungi admin jika ada perubahan pada file unggah</i></span>
+                    <span class="text-danger"><i>Hubungi admin jika ada perubahan pada file unggah</i></span>
                     @endif
+                    @endif
+
+
                 </div>
             </div>
             <div class="row mt-2">

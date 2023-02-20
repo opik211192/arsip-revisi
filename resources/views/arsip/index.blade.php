@@ -24,7 +24,7 @@
 
 
 <div class="card col-md-10">
-    <div class="card-header bg-dark">Create Arsip</div>
+    <div class="card-header bg-dark">Buat Arsip</div>
     <div class="card-body">
 
         <form action="{{ route('arsip.store') }}" method="post" enctype="multipart/form-data">

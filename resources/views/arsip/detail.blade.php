@@ -65,9 +65,9 @@
                     <tr>
                         <td id="t">File Unggah</td>
                         <td>:</td>
-                        <td>{{ $data->file_arsip }} <a href="{{ route('arsip.download', $data) }}"
-                                class="btn btn-sm btn-success ml-2" xdata-toggle="tooltip" data-placement="top"
-                                title="Download"><i class="fa fa-download" aria-hidden="true"></i></a></td>
+                        <td><a href="{{ route('arsip.download', $data) }}" class="btn btn-sm btn-success ml-2"
+                                xdata-toggle="tooltip" data-placement="top" title="Download">Download <i
+                                    class="fa fa-download" aria-hidden="true"></i></a></td>
                     </tr>
                     <tr>
                         <td id="t">Struktural</td>
@@ -111,7 +111,7 @@
             </table>
 
             @if (Auth::user()->hasRole('super admin') || Auth::user()->hasRole('admin'))
-            <button type="button" id="approval" class="btn btn-success btn-sm mt-3" data-toggle="modal"
+            <button type="button" id="approval" class="btn btn-secondary btn-sm mt-3" data-toggle="modal"
                 data-target="#exampleModal">
                 Approval
             </button>
@@ -169,21 +169,28 @@
 </div>
 @endsection
 @push('scripts')
-<script src="https://code.jquery.com/jquery-3.6.`0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-    crossorigin="anonymous"></script>
 <script>
     $(document).ready(function(){
         
+       if($('input[name="status"]:checked').val() == '0' || $('input[name="status"]:checked').val() == '1' ) {
+    
+            $('#keterangan').attr('hidden',true);
+        }
+        
         $('#approval').on('click', function(){
-            var value = $('input[name="status"]:checked').val();
-            if (value === '2') {
-                $('#keterangan').attr('hidden',false);
-            }else{
-                 $('#keterangan').attr('hidden',true);
+            if($('input[name="status"]:checked').val() == '0' || $('input[name="status"]:checked').val() == '1' ) {
+            
+                $('#keterangan').attr('hidden',true);
             }
+            // var value = $('input[name="status"]:checked').val();
+            // if (value === '2') {
+            //     $('#keterangan').attr('hidden',false);
+            // }else{
+            //      $('#keterangan').attr('hidden',true);
+            // }
         });
         
-        $('#keterangan').attr('hidden',true);
+       //$('#keterangan').attr('hidden',true);
         $('input[type=radio][name=status]').change(function(){
             if(this.value == '0'){
                 $('#keterangan').attr('hidden',true);
@@ -201,9 +208,16 @@
              document.getElementById('frm_edit').submit();
         }
 
-        $('#btnSubmit').on('click', function(){    
-               form_submit();
-        });
+        $('#btnSubmit').on('click', function(){
+               if($('input[name="status"]:checked').val() == '2' && $('#keterangan').val() === '' ) {
+                   alert('keterangan koreksi harus di isi!');
+                   return false
+                }
+
+                form_submit();
+
+              
+            });
         
        
        

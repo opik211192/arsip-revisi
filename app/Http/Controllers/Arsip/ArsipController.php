@@ -13,6 +13,7 @@ use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Struktural_detail;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
@@ -51,11 +52,14 @@ class ArsipController extends Controller
             'file_arsip' => 'required',
         ]);
         
+        //buat tanggal
+        $now =  Carbon::now();
+
         //buat nama file
         $datas = Struktural_detail::where('id', $request->id_pencipta_arsip)->first()->name;
         $tahun = $request->tahun;
         $jenis = Jenis::where('id', $request->jenis_id)->first()->name;
-        $namaFile = str_replace(' ', '-', $datas).'-'.str_replace(' ', '-',$request->file_arsip->getClientOriginalName());
+        $namaFile = $now->format('Ymd').'-'.str_replace(' ', '-', $datas).'-'.str_replace(' ', '-',$request->file_arsip->getClientOriginalName());
         $request->file_arsip->move(public_path()."/upload/$tahun/".$jenis, $namaFile);
 
         // inisialisasi nama file_arsip
@@ -201,6 +205,9 @@ class ArsipController extends Controller
           //super admnin & admin
         if (Auth::user()->roles->pluck('name')->contains('super admin') || Auth::user()->roles->pluck('name')->contains('admin')) {
             if ($request->hasFile('file_arsip')) {
+
+                $now = Carbon::now();
+
                 $namaFileOld = $arsip->file_arsip;
                 $tahunOld = $arsip->tahun;
                 $jenisOld = $arsip->jenis->name;
@@ -210,7 +217,7 @@ class ArsipController extends Controller
 
                 $tahun = $request->tahun;
                 $jenis = Jenis::where('id', $request->jenis_id)->first()->name;
-                $namaFile = str_replace(' ', '-', $datas).'-'.str_replace(' ', '-',$request->file_arsip->getClientOriginalName());
+                $namaFile = $now->format('Ymd').'-'.str_replace(' ', '-', $datas).'-'.str_replace(' ', '-',$request->file_arsip->getClientOriginalName());
 
                 $file_path_old = public_path()."/upload/$tahunOld/$jenisOld/$namaFileOld";
                 unlink($file_path_old);
@@ -255,6 +262,8 @@ class ArsipController extends Controller
             }else{
                 //echo "proses user disini";
                 if ($request->hasFile('file_arsip')) {
+                    $now = Carbon::now();
+
                     $namaFileOld = $arsip->file_arsip;
                     $tahunOld = $arsip->tahun;
                     $jenisOld = $arsip->jenis->name;
@@ -264,7 +273,7 @@ class ArsipController extends Controller
 
                     $tahun = $request->tahun;
                     $jenis = Jenis::where('id', $request->jenis_id)->first()->name;
-                    $namaFile = str_replace(' ', '-', $datas).'-'.str_replace(' ', '-',$request->file_arsip->getClientOriginalName());
+                    $namaFile = $now->format('Ymd').'-'.str_replace(' ', '-', $datas).'-'.str_replace(' ', '-',$request->file_arsip->getClientOriginalName());
 
                     $file_path_old = public_path()."/upload/$tahunOld/$jenisOld/$namaFileOld";
                     unlink($file_path_old);

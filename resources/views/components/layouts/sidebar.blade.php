@@ -65,6 +65,7 @@
     </div>
     @endcan
 
+    @can('setting')
     <div class="panel-group mb-4">
         <div class="panel panel-default">
             <small class="d-block text-white mb-2 text-uppercase"> <a class="text-white" data-toggle="collapse"
@@ -81,6 +82,8 @@
             </div>
         </div>
     </div>
+    @endcan
+
 
     <div class="mb-3">
         <small class="d-block text-white mb-2 text-uppercase"><b>Logout</b></small>
