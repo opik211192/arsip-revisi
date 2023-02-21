@@ -43,8 +43,8 @@ class UserTableSeeder extends Seeder
             'email' => 'user1@gmail.com',
             'username' => 'user1',
             'password' => bcrypt('rahasia123'),
-             'struktural_id' => 4,
-            'struktural_detail_id' => 10,
+             'struktural_id' => 7,
+            'struktural_detail_id' => 24,
             // 'unit_id' => 3,
             //'struktur_id' => 2,
         ]);
@@ -54,8 +54,8 @@ class UserTableSeeder extends Seeder
             'email' => 'user2@gmail.com',
             'username' => 'user2',
             'password' => bcrypt('rahasia123'),
-             'struktural_id' => 6,
-            'struktural_detail_id' => 19,
+             'struktural_id' => 7,
+            'struktural_detail_id' => 25,
             // 'unit_id' => 5,
             //'struktur_id' => 3,
         ]);
@@ -65,8 +65,8 @@ class UserTableSeeder extends Seeder
             'email' => 'user3@gmail.com',
             'username' => 'user3',
             'password' => bcrypt('rahasia123'),
-             'struktural_id' => 6,
-            'struktural_detail_id' => 19,
+             'struktural_id' => 7,
+            'struktural_detail_id' => 26,
             // 'unit_id' => 5,
             //'struktur_id' => 3,
         ]);

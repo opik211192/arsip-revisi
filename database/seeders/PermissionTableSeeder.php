@@ -28,5 +28,10 @@ class PermissionTableSeeder extends Seeder
             'name' => 'delete arsip',
             'guard_name' => 'web',
         ]);
+
+          Permission::create([
+            'name' => 'setting',
+            'guard_name' => 'web',
+        ]);
     }
 }
