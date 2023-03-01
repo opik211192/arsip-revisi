@@ -1,21 +1,13 @@
 <?php
-
-use App\Models\User;
-use App\Models\Struktur;
-use App\Models\Struktural;
-use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CobaController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\JenisController;
 use App\Http\Controllers\UserDataController;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\StrukturalController;
 use App\Http\Controllers\Arsip\ArsipController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JenisArsipController;
 use App\Http\Controllers\Permissions\RoleController;
 use App\Http\Controllers\Permissions\UserController;

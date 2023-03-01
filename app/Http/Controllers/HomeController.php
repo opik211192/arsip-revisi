@@ -2,14 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Arsip;
-use App\Models\Struktural;
-use App\Models\V_dashboard;
-use Illuminate\Http\Request;
-use App\Models\Struktural_detail;
 use Illuminate\Support\Facades\DB;
-use JeroenNoten\LaravelAdminLte\View\Components\Form\Select;
 
 class HomeController extends Controller
 {
