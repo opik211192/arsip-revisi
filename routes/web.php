@@ -61,7 +61,7 @@ Route::post('/user/alldata', [RegisterController::class,'ambilData'])->name('amb
 
 
 
-Route::middleware('has.role')->prefix('xyz')->group(function(){
+Route::middleware('has.role')->group(function(){
     Route::view('dashboard', 'dashboard')->name('dashboard');
     
     //Route untuk arsip

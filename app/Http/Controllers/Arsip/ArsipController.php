@@ -4,18 +4,19 @@ namespace App\Http\Controllers\Arsip;
 
 //use datatables;
 //use App\Models\Unit;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Arsip;
 use App\Models\Jenis;
 use App\Models\JenisArsip;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Models\Struktural_detail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Struktural_detail;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class ArsipController extends Controller
 {
@@ -52,6 +53,8 @@ class ArsipController extends Controller
             'file_arsip' => 'required',
         ]);
         
+        
+        //dd($request);
         //buat tanggal
         $now =  Carbon::now();
 
@@ -60,7 +63,8 @@ class ArsipController extends Controller
         $tahun = $request->tahun;
         $jenis = Jenis::where('id', $request->jenis_id)->first()->name;
         $namaFile = $now->format('Ymd').'-'.str_replace(' ', '-', $datas).'-'.str_replace(' ', '-',$request->file_arsip->getClientOriginalName());
-        $request->file_arsip->move(public_path()."/upload/$tahun/".$jenis, $namaFile);
+        //$request->file_arsip->move(public_path()."/upload/$tahun/".$jenis, $namaFile);
+        $request->file_arsip->storeAs("public/upload/$tahun/$jenis", $namaFile);
 
         // inisialisasi nama file_arsip
         $validateData['file_arsip'] = $namaFile;
@@ -183,9 +187,13 @@ class ArsipController extends Controller
         $jenis = $data->jenis->name;
         $namaFile = $data->file_arsip;
 
-        $file_path = public_path()."/upload/$tahun/$jenis/$namaFile";
-        return response()->download($file_path);
-        //dd($file_path);
+        //$file_path = public_path()."/storage/upload/$tahun/$jenis/$namaFile";
+
+        //$file_path = Storage::path("public/upload/$tahun/$jenis/$namaFile");
+        //return response()->download($file_path);
+        //return Storage::disk('storage')->download($file_path);
+        return  response()->download(storage_path("app/public/upload/$tahun/$jenis/". $namaFile));
+        //dd(storage_path("app/upload/$tahun"));
     }
 
     public function update(Request $request, Arsip $arsip)
@@ -219,9 +227,12 @@ class ArsipController extends Controller
                 $jenis = Jenis::where('id', $request->jenis_id)->first()->name;
                 $namaFile = $now->format('Ymd').'-'.str_replace(' ', '-', $datas).'-'.str_replace(' ', '-',$request->file_arsip->getClientOriginalName());
 
-                $file_path_old = public_path()."/upload/$tahunOld/$jenisOld/$namaFileOld";
+                //$file_path_old = public_path()."/upload/$tahunOld/$jenisOld/$namaFileOld";
+                $file_path_old = storage_path("app/public/upload/$tahunOld/$jenisOld/". $namaFileOld);
                 unlink($file_path_old);
-                $request->file_arsip->move(public_path()."/upload/$tahun/". $jenis, $namaFile);
+                //$request->file_arsip->move(public_path()."/upload/$tahun/". $jenis, $namaFile);
+                $request->file_arsip->storeAs("public/upload/$tahun/$jenis", $namaFile);
+
                 $validateData['file_arsip'] = $namaFile;
                 $arsip->update($validateData);
                 return redirect()->route('arsip.data')->with('success', 'Data berhasil diubah');
@@ -237,16 +248,31 @@ class ArsipController extends Controller
                     $tahun = $request->tahun;
                     $jenis = Jenis::where('id', $request->jenis_id)->first()->name;
 
-                    $file_path_old = public_path()."/upload/$tahunOld/$jenisOld/$namaFileOld";
-                    $file_path_new = public_path()."/upload/$tahun/$jenis/$namaFileOld";
+                    //$file_path_old = public_path()."/upload/$tahunOld/$jenisOld/$namaFileOld";
+                    //$file_path_new = public_path()."/upload/$tahun/$jenis/$namaFileOld";
+
+                    $file_path_old = storage_path("app/public/upload/$tahunOld/$jenisOld/". $namaFileOld);
+                    $file_path_new = storage_path("app/public/upload/$tahun/$jenis/". $namaFileOld);
+
+
+                    // if (!File::exists($file_path_new)) {
+                    //     File::makeDirectory(public_path()."/upload/$tahun/$jenis", 0777, true, true);
+                    //     File::move($file_path_old, public_path()."/upload/$tahun/$jenis/$namaFileOld");
+                    // }elseif(File::exists($file_path_new)){
+                    //     File::makeDirectory(public_path()."/upload/$tahun/$jenis", 0777, true);
+                    //     File::move($file_path_old, public_path()."/upload/$tahun/$jenis/$namaFileOld");
+                    // }
 
                     if (!File::exists($file_path_new)) {
-                        File::makeDirectory(public_path()."/upload/$tahun/$jenis", 0777, true, true);
-                        File::move($file_path_old, public_path()."/upload/$tahun/$jenis/$namaFileOld");
+                        File::makeDirectory(storage_path()."/app/public//upload/$tahun/$jenis", 0777, true, true);
+                        File::move($file_path_old, storage_path()."/app/public/upload/$tahun/$jenis/$namaFileOld");
                     }elseif(File::exists($file_path_new)){
-                        File::makeDirectory(public_path()."/upload/$tahun/$jenis", 0777, true);
-                        File::move($file_path_old, public_path()."/upload/$tahun/$jenis/$namaFileOld");
+                        File::makeDirectory(storage_path()."/app/public/upload/$tahun/$jenis", 0777, true);
+                        File::move($file_path_old, storage_path()."app/public/upload/$tahun/$jenis/$namaFileOld");
                     }
+
+
+
                     $arsip->update($validateData);
                     return redirect()->route('arsip.data')->with('success', 'Data berhasil diubah');
                 }else{
@@ -275,9 +301,13 @@ class ArsipController extends Controller
                     $jenis = Jenis::where('id', $request->jenis_id)->first()->name;
                     $namaFile = $now->format('Ymd').'-'.str_replace(' ', '-', $datas).'-'.str_replace(' ', '-',$request->file_arsip->getClientOriginalName());
 
-                    $file_path_old = public_path()."/upload/$tahunOld/$jenisOld/$namaFileOld";
+                    //$file_path_old = public_path()."/upload/$tahunOld/$jenisOld/$namaFileOld";
+                    $file_path_old = storage_path("app/public/upload/$tahun/$jenis/". $namaFile);
+
                     unlink($file_path_old);
-                    $request->file_arsip->move(public_path()."/upload/$tahun/". $jenis, $namaFile);
+                    //$request->file_arsip->move(public_path()."/upload/$tahun/". $jenis, $namaFile);
+                    $request->file_arsip->storeAs("public/upload/$tahun/$jenis", $namaFile);
+
                     $validateData['file_arsip'] = $namaFile;
                     $arsip->update($validateData);
                     return redirect()->route('arsip.data')->with('success', 'Data berhasil diubah');
@@ -290,16 +320,30 @@ class ArsipController extends Controller
                         $tahun = $request->tahun;
                         $jenis = Jenis::where('id', $request->jenis_id)->first()->name;
 
-                        $file_path_old = public_path()."/upload/$tahunOld/$jenisOld/$namaFileOld";
-                        $file_path_new = public_path()."/upload/$tahun/$jenis/$namaFileOld";
+                        // $file_path_old = public_path()."/upload/$tahunOld/$jenisOld/$namaFileOld";
+                        // $file_path_new = public_path()."/upload/$tahun/$jenis/$namaFileOld";
 
-                        if (!File::exists($file_path_new)) {
-                            File::makeDirectory(public_path()."/upload/$tahun/$jenis", 0777, true, true);
-                            File::move($file_path_old, public_path()."/upload/$tahun/$jenis/$namaFileOld");
-                        }elseif(File::exists($file_path_new)){
-                            File::makeDirectory(public_path()."/upload/$tahun/$jenis", 0777, true);
-                            File::move($file_path_old, public_path()."/upload/$tahun/$jenis/$namaFileOld");
-                        }
+                        $file_path_old = storage_path("app/public/upload/$tahunOld/$jenisOld/". $namaFileOld);
+                        $file_path_new = storage_path("app/public/upload/$tahun/$jenis/". $namaFileOld);
+
+                        // if (!File::exists($file_path_new)) {
+                        //     File::makeDirectory(public_path()."/upload/$tahun/$jenis", 0777, true, true);
+                        //     File::move($file_path_old, public_path()."/upload/$tahun/$jenis/$namaFileOld");
+                        // }elseif(File::exists($file_path_new)){
+                        //     File::makeDirectory(public_path()."/upload/$tahun/$jenis", 0777, true);
+                        //     File::move($file_path_old, public_path()."/upload/$tahun/$jenis/$namaFileOld");
+                        // }
+
+                        
+                    if (!File::exists($file_path_new)) {
+                        File::makeDirectory(storage_path()."/app/public//upload/$tahun/$jenis", 0777, true, true);
+                        File::move($file_path_old, storage_path()."/app/public/upload/$tahun/$jenis/$namaFileOld");
+                    }elseif(File::exists($file_path_new)){
+                        File::makeDirectory(storage_path()."/app/public/upload/$tahun/$jenis", 0777, true);
+                        File::move($file_path_old, storage_path()."app/public/upload/$tahun/$jenis/$namaFileOld");
+                    }
+
+
                         $arsip->update($validateData);
                         return redirect()->route('arsip.data')->with('success', 'Data berhasil diubah');
                     }else{
@@ -321,7 +365,9 @@ class ArsipController extends Controller
         $jenis =Jenis::where('id', $arsip->jenis_id)->first()->name;
         //dd(public_path()."/upload/$folderUser/$tahun/$jenis/$namaFile");
         $arsip->delete();
-        unlink(public_path()."/upload/$tahun/$jenis/$namaFile");
+        $file_path = storage_path("app/public/upload/$tahun/$jenis/". $namaFile);
+        unlink($file_path);
+
         return redirect()->route('arsip.data')->with('pesan', "Hapus $arsip->nama berhasil");
     }
 
