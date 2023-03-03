@@ -50,7 +50,7 @@ class ArsipController extends Controller
             'id_pencipta_arsip' => 'required',
             'uraian_arsip' => 'required',
             'user_id' => 'required',
-            'file_arsip' => 'required',
+            'file_arsip' => 'required|mimetypes:application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
         
         //buat tanggal
