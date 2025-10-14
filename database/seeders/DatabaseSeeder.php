@@ -2,15 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Jenis;
-use App\Models\JenisArsip;
-use App\Models\Struktur;
-use App\Models\Struktural_detail;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use App\Models\Unit;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+
 
 class DatabaseSeeder extends Seeder
 {
