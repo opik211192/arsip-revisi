@@ -24,7 +24,7 @@
             <img src="{{ asset('img/login.png') }}" height="60" class="mb-2" alt="Logo M-ARSIP">
             <h3 class="fw-bold text-uppercase mb-0"
                 style="color: #fff; letter-spacing: 2px; text-shadow: 0 0 8px rgba(0, 192, 239, 0.6);">
-                <span style="color: #00c0ef;">M</span>-ARSIP
+                <span style="color: #fcb920;">M</span>-ARSIP
             </h3>
         </a>
     </div>
