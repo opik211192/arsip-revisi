@@ -13,12 +13,12 @@
 @endif
 
 <div class="card mb-3">
-    <div class="card-header mystyle">Tambah Struktural</div>
+    <div class="card-header mystyle">Tambah Unit Kerja</div>
     <div class="card-body">
         <form action="{{ route('struktural_create.create') }}" method="post">
             @csrf
             <div class="form-group">
-                <label for="role">Nama Struktural</label>
+                <label for="role">Nama Unit Kerja</label>
                 <input type="text" class="form-control" id="name" name="name">
                 @error('jenis')
                 <div class="text-danger mt-2 d-block">{{ $message }}</div>
@@ -31,12 +31,12 @@
 </div>
 
 <div class="card">
-    <div class="card-header text-white mystyle">Data Struktural</div>
+    <div class="card-header text-white mystyle">Data Unit Kerja</div>
     <div class="card-body">
         <table class="table table-striped">
             <tr>
                 <th>#</th>
-                <th>Nama Struktural</th>
+                <th>Nama Unit Kerja</th>
                 <th>Action</th>
             </tr>
             @foreach ($strukturals as $index => $struktural)

@@ -14,7 +14,7 @@
 
 <div class="col-md-8">
     <div class="card mb-3">
-        <div class="card-header mystyle">Tambah Struktural</div>
+        <div class="card-header mystyle">Tambah Unit Kerja</div>
         <div class="card-body">
             <form action="{{ route('struktural.create') }}" method="post">
                 @csrf
@@ -26,7 +26,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="descripion">Struktural <a href="{{ route('struktural_create.create') }}"
+                    <label for="descripion">Unit Kerja <a href="{{ route('struktural_create.create') }}"
                             class="btn btn-sm btn-primary"><i class="fas fa-plus"></i>
                         </a></label>
                     <select name="struktural_id" id="struktural_id" class="form-control">

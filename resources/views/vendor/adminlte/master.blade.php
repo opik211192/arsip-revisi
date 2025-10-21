@@ -9,6 +9,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{ asset('img/logo.png') }}" type="image/x-icon">
+    <!-- Font Modern: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Terapkan font Inter di seluruh halaman */
+        body,
+        .content-wrapper,
+        .main-header,
+        .main-sidebar,
+        .navbar,
+        .brand-link,
+        .sidebar,
+        .content-header h1,
+        .table,
+        .btn,
+        .form-control,
+        .modal-content,
+        .card {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+            font-size: 0.9rem !important;
+            /* ⬅️ Ukuran font global sedikit lebih kecil */
+            letter-spacing: 0.2px;
+        }
+
+        /* Biar teks judul tetap tegas */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-weight: 600 !important;
+            letter-spacing: 0.3px;
+        }
+
+        /* Perhalus tampilan tombol dan input */
+        .btn,
+        .form-control {
+            border-radius: 8px !important;
+            font-size: 0.85rem !important;
+            /* ⬅️ Tombol dan input sedikit lebih kecil */
+        }
+
+        /* Ukuran tabel dan teks sidebar */
+        .table,
+        .sidebar {
+            font-size: 0.85rem !important;
+        }
+
+        /* Ukuran teks navbar */
+        .navbar {
+            font-size: 0.9rem !important;
+        }
+
+        /* Perkecil teks brand (logo tulisan) di sidebar */
+        .brand-text {
+            font-size: 0.95rem !important;
+        }
+    </style>
     {{-- Custom Meta Tags --}}
     @yield('meta_tags')
 

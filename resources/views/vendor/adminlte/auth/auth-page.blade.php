@@ -19,10 +19,13 @@
 <div class="{{ $auth_type ?? 'login' }}-box">
 
     {{-- Logo --}}
-    <div class="{{ $auth_type ?? 'login' }}-logo">
-        <a href="{{ $dashboard_url }}">
-            <img src="{{ asset('img/login.png') }}" height="50">
-            <h3>ARSIP MANAGEMENT</h3>
+    <div class="{{ $auth_type ?? 'login' }}-logo text-center">
+        <a href="{{ $dashboard_url }}" class="text-decoration-none d-flex flex-column align-items-center">
+            <img src="{{ asset('img/login.png') }}" height="60" class="mb-2" alt="Logo M-ARSIP">
+            <h3 class="fw-bold text-uppercase mb-0"
+                style="color: #fff; letter-spacing: 2px; text-shadow: 0 0 8px rgba(0, 192, 239, 0.6);">
+                <span style="color: #00c0ef;">M</span>-ARSIP
+            </h3>
         </a>
     </div>
 

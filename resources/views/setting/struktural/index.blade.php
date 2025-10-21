@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Data Struktural')
+@section('title', 'Data Unit Kerja')
 
 @section('content_header')
 <div></div>
@@ -14,14 +14,14 @@
 
 <div class="col-md-12">
     <div class="card">
-        <div class="card-header mystyle">Data Struktural</div>
+        <div class="card-header mystyle">Data Unit Kerja</div>
         <div class="card-body">
             <a href="{{ route('struktural.create') }}" class="mb-2 btn btn-sm btn-primary">Tambah</a>
             <table class="table table-striped table-bordered">
                 <tr>
                     <th>#</th>
                     <th>Nama Sub</th>
-                    <th>Struktural</th>
+                    <th>Unit Kerja</th>
                     <th>Action</th>
                 </tr>
                 @foreach ($details as $index => $struktural_detail)

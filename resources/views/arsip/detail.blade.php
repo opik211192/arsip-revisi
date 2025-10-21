@@ -70,7 +70,7 @@
                                     class="fa fa-download" aria-hidden="true"></i></a></td>
                     </tr>
                     <tr>
-                        <td id="t">Struktural</td>
+                        <td id="t">Unit Kerja</td>
                         <td>:</td>
                         <td>{{ $struktural[0]->struktural.' / '.$struktural[0]->struktural_detail }}</td>
                     </tr>

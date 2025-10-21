@@ -75,12 +75,12 @@
 
                             <div class="form-group row">
                                 <label for="struktural" class="col-md-4 col-form-label text-md-right">{{
-                                    __('Struktural')
+                                    __('Unit Kerja')
                                     }}</label>
 
                                 <div class="col-md-6">
                                     <select name="struktural_id" id="struktural_id" class="form-control">
-                                        <option value="{{ old('struktural') }}" selected disabled>Pilih Struktural
+                                        <option value="{{ old('struktural') }}" selected disabled>Pilih Unit Kerja
                                         </option>
                                         @foreach ($strukturals as $struktural)
                                         <option value="{{ $struktural->id }}">{{ $struktural->name }}</option>

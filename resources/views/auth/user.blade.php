@@ -25,7 +25,7 @@
                 <th style="width: 160px">Name</th>
                 <th>Username</th>
                 <th>Email</th>
-                <th>Struktural</th>
+                <th>Unit Kerja</th>
                 <th>Action</th>
             </tr>
             @foreach ($users as $index => $user)

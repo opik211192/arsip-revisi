@@ -24,33 +24,26 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $allArsip = Arsip::all()->count();
-       
-        // $arsips = DB::select('SELECT a.id,a.name,a.struktural_id,
-        //                     c.name as "struktural",
-        //                     COUNT(b.id_pencipta_arsip) AS "jml"
-        //                     FROM struktural_details a
-        //                     LEFT OUTER JOIN arsips b ON a.id = b.id_pencipta_arsip
-        //                     LEFT OUTER JOIN strukturals C ON a.struktural_id = c.id
-        //                     GROUP BY a.id,a.name,a.struktural_id,b.id_pencipta_arsip,c.name
-        //                     ');
-        
-        // $arsips = DB::table('struktural_details')
-        //             ->leftJoin('arsips', 'struktural_details.id', '=', 'arsips.id_pencipta_arsip')
-        //             ->leftJoin('strukturals', 'struktural_details.struktural_id', '=', 'strukturals.id')
-        //             ->select('struktural_details.id','strukturals.name AS struktural','struktural_details.name AS struktural_detail', DB::raw('count(arsips.id_pencipta_arsip) as jml'))
-        //             ->groupBy('struktural_details.id','struktural_details.name', 'strukturals.name', 'arsips.id_pencipta_arsip')
-        //             ->paginate(10);
-       // dd($arsips);
-       $countArsip = DB::table('strukturals')
-                        ->leftJoin('struktural_details', 'strukturals.id', '=', 'struktural_details.struktural_id')
-                        ->leftJoin('arsips', 'struktural_details.id', '=', 'arsips.id_pencipta_arsip')
-                        ->select('strukturals.name AS struktur', DB::raw('COUNT(arsips.id_pencipta_arsip) as jumlah'))
-                        ->groupBy('strukturals.name')
-                        ->orderBy('strukturals.id')
-                        ->get(); 
-        //dd($countArsip);
-        //dd($allArsip);
-        return view('home', compact('allArsip', 'countArsip'));
+        $allArsip = DB::table('arsips')->count();
+
+        $strukturals = DB::table('strukturals')
+            ->leftJoin('struktural_details', 'strukturals.id', '=', 'struktural_details.struktural_id')
+            ->leftJoin('arsips', 'struktural_details.id', '=', 'arsips.id_pencipta_arsip')
+            ->select(
+                'strukturals.id as struktural_id',
+                'strukturals.name as struktural_name',
+                'struktural_details.id as detail_id',
+                'struktural_details.name as detail_name',
+                DB::raw('COUNT(arsips.id) as jumlah'),
+                DB::raw('MAX(arsips.created_at) as terakhir_input')
+            )
+            ->groupBy('strukturals.id', 'strukturals.name', 'struktural_details.id', 'struktural_details.name')
+            ->orderBy('strukturals.id')
+            ->get()
+            ->groupBy('struktural_name');
+
+        return view('home', compact('allArsip', 'strukturals'));
     }
+
+
 }

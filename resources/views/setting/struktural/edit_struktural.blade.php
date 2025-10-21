@@ -13,13 +13,13 @@
 @endif
 
 <div class="card mb-3">
-    <div class="card-header text-white mystyle">Edit Struktural</div>
+    <div class="card-header text-white mystyle">Edit Unit Kerja</div>
     <div class="card-body">
         <form action="{{ route('struktural_create.edit', $struktural) }}" method="post">
             @csrf
             @method('PUT')
             <div class="form-group">
-                <label for="role">Nama Struktural</label>
+                <label for="role">Nama Unit Kerja</label>
                 <input type="text" class="form-control" id="name" name="name"
                     value="{{ old('name') ?? $struktural->name }}">
                 @error('jenis')

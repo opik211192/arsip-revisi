@@ -127,7 +127,7 @@ return [
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => 'sidebar-dark-primary elevation-4',
+    'classes_sidebar' => 'sidebar-light-dark elevation-4',
     'classes_sidebar_nav' => '',
     'classes_topnav' => 'navbar-white navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
@@ -242,9 +242,9 @@ return [
             'text' => 'search',
         ],
         [
-            'text' => 'Home',
+            'text' => 'Dashboard',
             'route'  => 'home',
-            'icon'   => 'fa fa-home',
+            'icon'   => 'fa fa-tachometer-alt',
             // 'can'  => 'manage-blog',
         ],
         // [
@@ -314,7 +314,7 @@ return [
              'can'     => 'setting',
             'submenu' => [
                 [
-                    'text'    => 'Struktural',
+                    'text'    => 'Unit Kerja',
                     'route'     => 'struktural.index',
                 ],
                 [
