@@ -47,7 +47,9 @@
 @section('content')
 
 @if (session('success'))
-<div class="alert alert-success">{{ session('success') }}</div>
+<div class="alert alert-success alert-dismissible fade show" id="alert-success" role="alert">
+    {{ session('success') }}
+</div>
 @endif
 
 <div class="card">
@@ -200,6 +202,18 @@ Auth::user()->roles->pluck('name')->contains('admin'))
         }
     });
     
+});
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const alertBox = document.getElementById('alert-success');
+    if (alertBox) {
+        setTimeout(() => {
+            alertBox.style.transition = 'opacity 0.6s ease';
+            alertBox.style.opacity = '0';
+            setTimeout(() => alertBox.remove(), 600);
+        }, 5000);
+    }
 });
 </script>
 @endpush

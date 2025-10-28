@@ -60,4 +60,9 @@ class Arsip extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
     
+    // ini upload multiple
+    public function uploads()
+    {
+        return $this->hasMany(ArsipUpload::class, 'arsip_id');
+    }
 }

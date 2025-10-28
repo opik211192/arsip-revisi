@@ -57,6 +57,22 @@
         width: 100% !important;
     }
 
+    fieldset {
+        border: 1.5px solid #ccc !important;
+        background-color: #fafafa;
+    }
+
+    legend {
+        font-weight: 600;
+        color: #0d6efd;
+    }
+
+    fieldset .form-group label {
+        flex: 0 0 30%;
+        text-align: left;
+        margin-right: 10px;
+    }
+
     /* 🔹 Responsif mobile */
     @media (max-width: 768px) {
         .form-section {
@@ -78,36 +94,8 @@
             padding-left: 0;
         }
     }
-
-    fieldset {
-        border: 1.5px solid #ccc !important;
-        background-color: #fafafa;
-    }
-
-    legend {
-        font-weight: 600;
-        color: #0d6efd;
-    }
-
-    fieldset .form-group label {
-        flex: 0 0 30%;
-        text-align: left;
-        margin-right: 10px;
-    }
 </style>
 @endsection
-
-@push('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script>
-<script>
-    $(document).ready(function() {
-        $('.select2').select2({
-            theme: 'classic',
-            width: '100%',
-        });
-    });
-</script>
-@endpush
 
 @section('content')
 @if (session('success'))
@@ -126,9 +114,9 @@
             <form action="{{ route('arsip.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
 
-                {{-- 🔹 Form Section: KIRI & KANAN --}}
+                {{-- 🔹 Dua kolom utama --}}
                 <div class="form-section">
-                    {{-- 🔸 Kolom Kiri --}}
+                    {{-- 🔸 Kolom kiri --}}
                     <div class="form-column">
                         <div class="form-group">
                             <label for="jenis_arsip_id">Jenis Arsip</label>
@@ -173,41 +161,13 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="no_box">No. Box</label>
-                            <input type="text" class="form-control" id="no_box" name="no_box" placeholder="BOX-12"
+                            <label for="no_box">No. Boks</label>
+                            <input type="text" class="form-control" id="no_box" name="no_box" placeholder="Boks-12"
                                 required>
                         </div>
-
-                        <fieldset class="mt-4 border rounded-3 p-3">
-                            <legend class="float-none w-auto px-2 text-primary" style="font-size: 14px;">
-                                <i class="fas fa-file-upload me-1"></i> Upload File Arsip
-                            </legend>
-
-                            <div id="file-wrapper">
-                                <div class=" file-group mb-3">
-                                    <label class="pt-2">
-                                        <i class="fas fa-paperclip text-secondary me-1"></i> Pilih File
-                                    </label>
-                                    <div class="w-100 d-flex align-items-center gap-2">
-                                        <input type="file" name="file_arsip[]" class="form-control mr-1"
-                                            accept=".pdf,.doc,.docx,.xls,.xlsx">
-                                        <button type="button" class="btn btn-success btn-sm add-file"
-                                            title="Tambah file" hidden>
-                                            <i class="fas fa-plus"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <small class="text-muted d-block mt-2">
-                                <i class="fas fa-info-circle me-1"></i>
-                                Format: <strong>.pdf, .doc, .docx, .xls, .xlsx</strong> &nbsp; | &nbsp;
-                                Maksimal per file: <strong>5 MB</strong>
-                            </small>
-                        </fieldset>
                     </div>
 
-                    {{-- 🔸 Kolom Kanan --}}
+                    {{-- 🔸 Kolom kanan --}}
                     <div class="form-column">
                         <div class="form-group">
                             <label for="id_pencipta_arsip">Pencipta Arsip</label>
@@ -244,6 +204,37 @@
                     </div>
                 </div>
 
+                {{-- 🔹 Upload File Arsip (pindah ke bawah) --}}
+                <div class="col-lg-6">
+                    <fieldset class="mt-4 border rounded-3 p-3 upload-fieldset">
+                        <legend class="float-none w-auto px-2 text-primary" style="font-size: 14px;">
+                            <i class="fas fa-file-upload me-1"></i> Upload File Arsip
+                        </legend>
+
+                        <div id="file-wrapper">
+                            <div class="file-group mb-3">
+                                <label class="pt-2">
+                                    <i class="fas fa-paperclip text-secondary me-1"></i> Pilih File
+                                </label>
+                                <div class="w-100 d-flex align-items-center gap-2">
+                                    <input type="file" name="file_arsip[]" class="form-control mr-1"
+                                        accept="application/pdf">
+                                    <button type="button" class="btn btn-success btn-sm add-file" title="Tambah file">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <small class="text-muted d-block mt-2">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Format: <strong>.pdf</strong> &nbsp; | &nbsp;
+                            Maksimal total file: <strong>10</strong> &nbsp; | &nbsp;
+                            Ukuran maksimum: <strong>25 MB</strong>.
+                        </small>
+                    </fieldset>
+                </div>
+
                 {{-- Hidden --}}
                 <input type="hidden" name="user_id" value="{{ $user->id }}">
 
@@ -263,9 +254,19 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            theme: 'classic',
+            width: '100%',
+        });
+    });
+</script>
 <script>
     // Batas maksimal file
-    const maxFiles = 5;
+    const MAX_FILE_SIZE_MB = 25;
+    const maxFiles = 10;
 
     // Tambah input file
     $(document).on('click', '.add-file', function() {
@@ -283,7 +284,7 @@
             </label>
             <div class="w-100 d-flex align-items-center gap-2">
                 <input type="file" name="file_arsip[]" class="form-control mr-1"
-                    accept=".pdf,.doc,.docx,.xls,.xlsx">
+                    accept="application/pdf">
                 <button type="button" class="btn btn-danger btn-sm remove-file" title="Hapus file">
                     <i class="fas fa-minus"></i>
                 </button>
@@ -297,6 +298,49 @@
     $(document).on('click', '.remove-file', function() {
         $(this).closest('.file-group').remove();
     });
-</script>
 
+    // Validasi sebelum submit
+    $('form').on('submit', function(e) {
+        let isValid = true;
+        let submitBtn = $(this).find('button[type="submit"]');
+
+        // Pastikan ada file yang dipilih
+        if ($('input[name="file_arsip[]"]').filter(function() { return this.files.length > 0; }).length === 0) {
+            alert("Silakan pilih minimal 1 file PDF untuk diupload.");
+            e.preventDefault();
+            return false;
+        }
+
+        $('input[name="file_arsip[]"]').each(function() {
+            let files = this.files;
+
+            for (let i = 0; i < files.length; i++) {
+                let file = files[i];
+                let sizeMB = file.size / (1024 * 1024);
+
+                if (!file.name.toLowerCase().endsWith('.pdf')) {
+                    alert(`File "${file.name}" tidak valid. Hanya file PDF yang diperbolehkan.`);
+                    isValid = false;
+                    break;
+                }
+
+                if (sizeMB > MAX_FILE_SIZE_MB) {
+                    alert(`File "${file.name}" melebihi batas ukuran ${MAX_FILE_SIZE_MB} MB.`);
+                    isValid = false;
+                    break;
+                }
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            submitBtn.prop('disabled', false).text('Simpan');
+            return false;
+        }
+
+        // jika semua valid
+        submitBtn.prop('disabled', true).text('Menyimpan...');
+    });
+
+</script>
 @endpush

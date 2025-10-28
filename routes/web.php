@@ -69,6 +69,11 @@ Route::middleware('has.role')->group(function(){
         Route::get('/approval/{arsip}', [ArsipController::class, 'approval'])->name('arsip.approval');
         Route::put('/approval/{arsip}', [ArsipController::class, 'approvalupdate']);
 
+         // 📎 File tambahan (multi upload)
+        Route::get('/download-file/{id}', [ArsipController::class, 'downloadFile'])->name('arsip.downloadFile');
+        Route::get('/arsip/view-file/{id}', [ArsipController::class, 'viewFile'])->name('arsip.viewFile');
+        Route::delete('/delete-file/{id}', [ArsipController::class, 'deleteFile'])->name('arsip.deleteFile');
+
 
     });
 

@@ -25,7 +25,6 @@ class CreateArsipsTable extends Migration
                 $table->string('tahun');
                 $table->unsignedBigInteger('id_pencipta_arsip');
                 $table->string('uraian_arsip');
-                $table->string('file_arsip');
                 $table->integer('status')->default(0);
                 $table->text('keterangan')->nullable();  
                 

@@ -18,6 +18,8 @@ class CreateArsipUploadsTable extends Migration
             $table->unsignedBigInteger('arsip_id');
             $table->string('file_path');
             $table->timestamps();
+
+            $table->foreign('arsip_id')->references('id')->on('arsips')->onDelete('cascade');
         });
     }
 
