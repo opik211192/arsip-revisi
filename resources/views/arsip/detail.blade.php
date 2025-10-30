@@ -51,7 +51,7 @@
 @endsection
 
 @section('content')
-<div class="col-lg-10 col-md-11 mx-auto">
+<div class="col-lg-12 col-md-11 mx-auto">
     <div class="card">
         <div class="card-header bg-gradient-dark text-white d-flex justify-content-between align-items-center">
             <span><i class="fas fa-file-alt"></i> Detail Arsip</span>
@@ -114,31 +114,43 @@
                         <td class="detail-value">{{ $struktural[0]->struktural_detail }}</td>
                     </tr>
 
-                    {{-- ✅ File Unggahan --}}
+                    {{-- ✅ File Unggahan (Tabel Searchable) --}}
                     <tr>
                         <td class="detail-label">File Unggahan</td>
                         <td>
                             @if ($data->uploads && $data->uploads->count() > 0)
-                            <ul class="list-group file-list">
-                                @foreach ($data->uploads as $file)
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <i class="fas fa-file-pdf text-danger me-1"></i>
-                                        {{ basename($file->file_path) }}
-                                    </div>
-                                    <div>
-                                        <a href="{{ route('arsip.viewFile', $file->id) }}" target="_blank"
-                                            class="btn btn-info btn-sm me-1" title="Lihat">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        {{-- <a href="{{ route('arsip.downloadFile', $file->id) }}"
-                                            class="btn btn-success btn-sm" title="Download">
-                                            <i class="fas fa-download"></i>
-                                        </a> --}}
-                                    </div>
-                                </li>
-                                @endforeach
-                            </ul>
+                            <div class="table-responsive">
+                                <table id="table-uploads" class="table table-bordered table-striped align-middle">
+                                    <thead class="table-secondary">
+                                        <tr>
+                                            <th style="width:5%">No</th>
+                                            <th>Nama File</th>
+                                            <th style="width:15%;text-align:center;">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($data->uploads as $index => $file)
+                                        <tr>
+                                            <td class="text-center">{{ $index + 1 }}</td>
+                                            <td>
+                                                <i class="fas fa-file-pdf text-danger me-1"></i>
+                                                {{ basename($file->file_path) }}
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="{{ route('arsip.viewFile', $file->id) }}" target="_blank"
+                                                    class="btn btn-info btn-sm" title="Lihat File">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                {{-- <a href="{{ route('arsip.downloadFile', $file->id) }}"
+                                                    class="btn btn-success btn-sm" title="Download">
+                                                    <i class="fas fa-download"></i>
+                                                </a> --}}
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                             @else
                             <p class="text-muted">Belum ada file diarsipkan.</p>
                             @endif
@@ -235,6 +247,45 @@
 <script>
     $(document).ready(function() {
     // toggle keterangan otomatis
+    $('input[name="status"]').on('change', function() {
+        if ($(this).val() == '2') {
+            $('#keterangan').removeAttr('hidden');
+        } else {
+            $('#keterangan').attr('hidden', true).val('');
+        }
+    });
+
+    $('#btnSubmit').on('click', function(e) {
+        if ($('input[name="status"]:checked').val() == '2' && $('#keterangan').val().trim() === '') {
+            alert('Keterangan koreksi harus diisi!');
+            e.preventDefault();
+        }
+    });
+});
+</script>
+
+{{-- ✅ DataTables CDN --}}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+    // 🔹 Aktifkan DataTables di tabel file
+    $('#table-uploads').DataTable({
+        language: {
+            search: "Cari File:",
+            lengthMenu: "Tampilkan _MENU_ file per halaman",
+            info: "Menampilkan _START_ - _END_ dari _TOTAL_ file",
+            paginate: { previous: "←", next: "→" },
+            zeroRecords: "Tidak ada file ditemukan"
+        },
+        pageLength: 5,
+        ordering: true,
+        responsive: true
+    });
+
+    // 🔹 Toggle textarea keterangan otomatis (kode lama kamu)
     $('input[name="status"]').on('change', function() {
         if ($(this).val() == '2') {
             $('#keterangan').removeAttr('hidden');

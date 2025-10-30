@@ -41,6 +41,16 @@
         padding: 3px 8px;
         font-size: 0.8rem;
     }
+
+    .table td div {
+        line-height: 1.4;
+    }
+
+    .table td div strong {
+        color: #333;
+        font-weight: 600;
+        margin-right: 5px;
+    }
 </style>
 @endsection
 
@@ -62,9 +72,9 @@
                 <tr>
                     <th>#</th>
                     <th>Urian Arsip</th>
-                    <th>No Berkas</th>
-                    <th>No Box</th>
-                    <th>Jenis</th>
+                    <th>Tahun</th>
+                    <th>No Arsip</th>
+                    <th>Klasifikasi</th>
                     <th>Jenis Arsip</th>
                     <th>Pencipta</th>
                     <th>Dibuat Oleh</th>
@@ -77,9 +87,9 @@
                 <tr>
                     <th>#</th>
                     <th>Uraian Arsip</th>
-                    <th>No Berkas</th>
-                    <th>No Box</th>
-                    <th>Jenis</th>
+                    <th>Tahun</th>
+                    <th>No Arsip</th>
+                    <th>Klasifikasi</th>
                     <th>Jenis Arsip</th>
                     <th>Status</th>
                     <th>Terakhir Diperbarui</th>
@@ -149,8 +159,20 @@ Auth::user()->roles->pluck('name')->contains('admin'))
         columns: isAdmin ? [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             { data: 'uraian_arsip', name: 'uraian_arsip' },
-            { data: 'no_berkas', name: 'no_berkas' },
-            { data: 'no_box', name: 'no_box' },
+            { data: 'tahun', name: 'tahun' },
+            {
+                data: null,
+                    name: 'nomor_arsip',
+                    render: function (data, type, row) {
+                    return `
+                        <div class="text-start">
+                            <div><strong>No. Box:</strong> ${row.no_box ?? '-'}</div>
+                            <div><strong>No. Berkas:</strong>${row.no_berkas ?? '-'}</div>
+                            <div><strong>No. Item:</strong> ${row.no_item ?? '-'}</div>
+                        </div>
+                    `;
+                }
+            },
             { data: 'jenis', name: 'jenis' },
             { data: 'jenis_arsip', name: 'jenis_arsip' },
             { data: 'pencipta', name: 'pencipta' },
@@ -173,8 +195,20 @@ Auth::user()->roles->pluck('name')->contains('admin'))
         ] : [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             { data: 'uraian_arsip', name: 'uraian_arsip' },
-            { data: 'no_berkas', name: 'no_berkas' },
-            { data: 'no_box', name: 'no_box' },
+            { data: 'tahun', name: 'tahun' },
+            {
+                data: null,
+                name: 'nomor_arsip',
+                render: function (data, type, row) {
+                    return `
+                        <div class="text-start">
+                            <div><strong>No. Box:</strong>${row.no_box ?? '-'}</div>
+                            <div><strong>No. Berkas:</strong>${row.no_berkas ?? '-'}</div>
+                            <div><strong>No. Item:</strong> ${row.no_item ?? '-'}</div>
+                        </div>
+                    `;
+                }
+            },
             { data: 'jenis', name: 'jenis' },
             { data: 'jenis_arsip', name: 'jenis_arsip' },
             {

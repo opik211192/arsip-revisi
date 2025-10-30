@@ -74,6 +74,9 @@ Route::middleware('has.role')->group(function(){
         Route::get('/arsip/view-file/{id}', [ArsipController::class, 'viewFile'])->name('arsip.viewFile');
         Route::delete('/delete-file/{id}', [ArsipController::class, 'deleteFile'])->name('arsip.deleteFile');
 
+        Route::post('/upload-temp', [ArsipController::class, 'uploadTemp'])->name('arsip.upload-temp');
+        Route::post('/delete-temp', [ArsipController::class, 'deleteTemp'])->name('arsip.delete-temp');
+
 
     });
 
