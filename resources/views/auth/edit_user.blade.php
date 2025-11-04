@@ -32,7 +32,7 @@
                             @method('PUT')
 
                             <div class="form-group row">
-                                <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
+                                <label for="name" class="col-md-4 col-form-label text-md-right">Nama</label>
 
                                 <div class="col-md-6">
                                     <input id="name" type="text"
@@ -48,8 +48,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address')
-                                    }}</label>
+                                <label for="email" class="col-md-4 col-form-label text-md-right">Alamat Email</label>
 
                                 <div class="col-md-6">
                                     <input id="email" type="email"
@@ -133,8 +132,8 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group row">
-                                        <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Old
-                                            Password') }}</label>
+                                        <label for="password" class="col-md-4 col-form-label text-md-right">Password
+                                            Lama</label>
 
                                         <div class="col-md-6">
                                             <input id="password" type="password"
@@ -150,8 +149,8 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('New
-                                            Password') }}</label>
+                                        <label for="password" class="col-md-4 col-form-label text-md-right">Password
+                                            Baru</label>
 
                                         <div class="col-md-6">
                                             <input id="password" type="password"
@@ -169,7 +168,7 @@
                                     <div class="form-group row">
                                         <label for="newpassword-confirm"
                                             class="col-md-4 col-form-label text-md-right">{{
-                                            __('Confirm Password') }}</label>
+                                            __('Konfirmasi Password') }}</label>
 
                                         <div class="col-md-6">
                                             <input id="newpassword-confirm" type="password" class="form-control"
@@ -186,6 +185,7 @@
                                     <button type="submit" class="btn btn-primary">
                                         {{ __('Update') }}
                                     </button>
+                                    <a href="{{ route('user.data') }}" class="btn btn-danger">Kembali</a>
                                 </div>
                             </div>
                         </form>

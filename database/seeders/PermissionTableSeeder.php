@@ -20,6 +20,11 @@ class PermissionTableSeeder extends Seeder
             ]);
 
         Permission::create([
+            'name' => 'create user',
+            'guard_name' => 'web',
+        ]);
+        
+        Permission::create([
             'name' => 'show users',
             'guard_name' => 'web',
         ]);

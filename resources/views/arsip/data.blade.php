@@ -49,7 +49,7 @@
     .table td div strong {
         color: #333;
         font-weight: 600;
-        margin-right: 5px;
+        margin-right:
     }
 </style>
 @endsection
@@ -237,6 +237,7 @@ Auth::user()->roles->pluck('name')->contains('admin'))
     });
     
 });
+
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {

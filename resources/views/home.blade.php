@@ -4,19 +4,18 @@
 
 @push('css')
 <style>
+  /* (CSS kamu tetap sama, tidak diubah sedikit pun) */
   :root {
     --color-primary: #007bff;
     --color-secondary: #343a40;
     --color-light: #f8f9fa;
   }
 
-  /* Efek hover list */
   .list-item-hover:hover {
     background-color: var(--color-light) !important;
     transition: background 0.25s ease-in-out;
   }
 
-  /* Scrollbar */
   .card-body::-webkit-scrollbar {
     width: 6px;
   }
@@ -30,7 +29,6 @@
     background-color: rgba(0, 0, 0, 0.4);
   }
 
-  /* Badge gradasi */
   .badge-gradient {
     background: linear-gradient(135deg, #007bff, #00b894);
     font-size: 0.85rem;
@@ -41,7 +39,6 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
   }
 
-  /* Small box modern */
   .small-box {
     border-radius: 10px !important;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
@@ -75,7 +72,6 @@
     opacity: 0.3;
   }
 
-  /* Tabel user */
   .table-user td {
     vertical-align: middle;
     padding: 8px 10px;
@@ -85,19 +81,16 @@
     color: var(--color-secondary);
   }
 
-  /* Card header style */
   .card-header {
     font-weight: 600;
     font-size: 1.05rem;
     border-bottom: none;
   }
 
-  /* Gradient untuk header */
   .bg-gradient-primary {
     background: linear-gradient(135deg, #007bff, #0062cc);
   }
 
-  /* Tampilan struktur list */
   .struktur-title {
     color: var(--color-secondary);
     font-weight: 600;
@@ -124,58 +117,13 @@
       <div class="col-md-8">
         <div class="card shadow-sm border-0 h-100">
           <div class="card-header bg-gradient-dark text-white d-flex align-items-center">
-
             <h5 class="mb-0">Jumlah Arsip Unit Kerja</h5>
           </div>
 
-          <div class="card-body p-3" style="max-height: 450px; overflow-y: auto;">
-            @foreach ($strukturals as $unitKerja => $details)
-            @php
-            $totalArsip = collect($details)->sum('jumlah');
-            @endphp
-
-            <div class="mb-4 border-bottom pb-3">
-              <h6 class="fw-bold text-dark d-flex justify-content-between align-items-center mb-2">
-                <span><i class="fas fa-folder me-1"></i> {{ $unitKerja }}</span>
-                <span class="badge bg-gradient-lightblue">Total: {{ $totalArsip }}</span>
-              </h6>
-
-              <div class="table-responsive">
-                <table class="table table-sm align-middle mb-0">
-                  <thead class="table-light">
-                    <tr>
-                      <th style="width: 5%">No.</th>
-                      <th>Detail</th>
-                      <th class="text-end" style="width: 15%">Jumlah</th>
-                      <th class="text-center" style="width: 25%">Update Terakhir</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($details as $index => $detail)
-                    @if ($detail->detail_name)
-                    <tr>
-                      <td class="text-center">{{ $loop->iteration }}</td>
-                      <td class="text-primary">{{ $detail->detail_name }}</td>
-                      <td class="text-end fw-bold">{{ $detail->jumlah }}</td>
-                      <td class="text-center text-muted">
-                        @if ($detail->terakhir_input)
-                        {{ \Carbon\Carbon::parse($detail->terakhir_input)->locale('id')->diffForHumans() }}
-                        <br>
-                        <small class="text-secondary">
-                          ({{ \Carbon\Carbon::parse($detail->terakhir_input)->format('d M Y H:i') }})
-                        </small>
-                        @else
-                        <span class="text-danger">Belum ada arsip</span>
-                        @endif
-                      </td>
-                    </tr>
-                    @endif
-                    @endforeach
-                  </tbody>
-                </table>
-              </div>
+          <div id="arsip-container" class="card-body p-3" style="max-height: 450px; overflow-y: auto;">
+            <div class="text-center text-muted my-4">
+              <i class="fas fa-spinner fa-spin"></i> Sedang memuat data...
             </div>
-            @endforeach
           </div>
         </div>
       </div>
@@ -184,7 +132,7 @@
       <div class="col-md-4">
         <div class="small-box bg-gradient-lightblue">
           <div class="inner text-center">
-            <h3 class="">{{ $allArsip }}</h3>
+            <h3 id="total-arsip">...</h3>
             <p>Total Seluruh Arsip</p>
           </div>
           <div class="icon">
@@ -195,5 +143,104 @@
     </div>
   </div>
 </div>
-
 @stop
+
+@section('js')
+<script>
+  $(document).ready(function() {
+    $.ajax({
+        url: "{{ route('dashboard.data') }}", // 🔗 ambil dari API (api.php)
+        method: "GET",
+        dataType: "json",
+        success: function(response) {
+            // 🔸 Update total arsip
+            $("#total-arsip").text(response.allArsip ?? 0);
+
+            // 🔸 Tampilkan daftar unit kerja
+            let html = '';
+            $.each(response.strukturals, function(unitKerja, details) {
+                let totalArsip = 0;
+                $.each(details, function(_, d) { totalArsip += parseInt(d.jumlah); });
+
+                html += `
+                <div class="mb-4 border-bottom pb-3">
+                  <h6 class="fw-bold text-dark d-flex justify-content-between align-items-center mb-2">
+                    <span><i class="fas fa-folder me-1"></i> ${unitKerja}</span>
+                    <span class="badge bg-gradient-lightblue">Total: ${totalArsip}</span>
+                  </h6>
+                  <div class="table-responsive">
+                    <table class="table table-sm align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th style="width: 5%">No.</th>
+                          <th>Detail</th>
+                          <th class="text-end" style="width: 15%">Jumlah</th>
+                          <th class="text-center" style="width: 25%">Update Terakhir</th>
+                        </tr>
+                      </thead>
+                      <tbody>`;
+
+             $.each(details, function(i, detail) {
+                  if (detail.detail_name) {
+                      const updated = detail.terakhir_input ? new Date(detail.terakhir_input) : null;
+                      let formatted;
+
+                      if (updated) {
+                          const diff = Date.now() - updated.getTime();
+                          const rtf = new Intl.RelativeTimeFormat('id', { numeric: 'auto' });
+
+                          const minutes = Math.floor(diff / (1000 * 60));
+                          const hours = Math.floor(minutes / 60);
+                          const days = Math.floor(hours / 24);
+                          const months = Math.floor(days / 30);
+                          const years = Math.floor(days / 365);
+
+                          let relative = '';
+                          if (years > 0) relative = rtf.format(-years, 'year');
+                          else if (months > 0) relative = rtf.format(-months, 'month');
+                          else if (days > 0) relative = rtf.format(-days, 'day');
+                          else if (hours > 0) relative = rtf.format(-hours, 'hour');
+                          else if (minutes > 0) relative = rtf.format(-minutes, 'minute');
+                          else relative = 'Baru saja';
+
+                          const formattedDate = updated.toLocaleDateString('id-ID', {
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric'
+                          }).replace('.', ''); // hilangkan titik setelah bulan
+
+                          let formattedTime = updated.toLocaleTimeString('id-ID', {
+                              hour: '2-digit',
+                              minute: '2-digit'
+                          });
+
+                          formattedTime = formattedTime.replace('.', ':');
+
+                          formatted = `${relative}<br>(${formattedDate} ${formattedTime})`;
+                      } else {
+                          formatted = `<span class="text-danger">Belum ada arsip</span>`;
+                      }
+
+                      html += `
+                      <tr>
+                          <td class="text-center">${i + 1}</td>
+                          <td class="text-primary">${detail.detail_name}</td>
+                          <td class="text-end fw-bold">${detail.jumlah}</td>
+                          <td class="text-center text-muted">${formatted}</td>
+                      </tr>`;
+                  }
+              });
+
+
+                html += `</tbody></table></div></div>`;
+            });
+
+            $("#arsip-container").html(html);
+        },
+        error: function() {
+            $("#arsip-container").html('<div class="alert alert-danger">Gagal memuat data dari server.</div>');
+        }
+    });
+});
+</script>
+@endsection

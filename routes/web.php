@@ -38,7 +38,11 @@ Route::get('coba', [CobaController::class, 'index'])->name('coba.index');
 //Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 //Auth::routes();
-Auth::routes(['register' => false]);
+Auth::routes([
+    'register' => false,
+    'verify' => true,
+]);
+
 
 Route::get('/user/data', [UserDataController::class, 'index'])->name('user.data');
 Route::get('/user/create', [UserDataController::class, 'create'])->name('user.create');
@@ -55,6 +59,9 @@ Route::post('/user/alldata', [RegisterController::class,'ambilData'])->name('amb
 
 Route::middleware('has.role')->group(function(){
     Route::view('dashboard', 'dashboard')->name('dashboard');
+
+Route::get('/dashboard/data', [App\Http\Controllers\HomeController::class, 'getDashboardData'])->name('dashboard.data');
+
     
     //Route untuk arsip
     Route::prefix('arsip')->group(function(){

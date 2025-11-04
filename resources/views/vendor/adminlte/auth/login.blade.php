@@ -4,6 +4,76 @@
 <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 @stop
 
+@section('adminlte_css')
+<style>
+    body.login-page {
+        /* Baris ini diubah */
+        background: url('{{ asset("img/background.png") }}') no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        /* Akhir perubahan */
+
+        background-attachment: fixed;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .login-box {
+        width: 380px;
+        margin-top: 4%;
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-logo a {
+        font-weight: 600;
+        color: #1d2b64 !important;
+        letter-spacing: 0.5px;
+    }
+
+    .input-group-text {
+        background-color: #1d2b64;
+        color: white;
+        border: none;
+        border-radius: 0 10px 10px 0;
+    }
+
+    .form-control {
+        border-radius: 10px 0 0 10px;
+        border: 1px solid #ccc;
+    }
+
+    .btn-primary {
+        background: #1d2b64;
+        border: none;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background: #162251;
+        transform: scale(1.03);
+    }
+
+    .login-box-msg {
+        font-size: 1.1rem;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .footer-text {
+        font-size: 0.85rem;
+        color: #555;
+    }
+</style>
+@stop
+
 @php( $login_url = View::getSection('login_url') ?? config('adminlte.login_url', 'login') )
 @php( $register_url = View::getSection('register_url') ?? config('adminlte.register_url', 'register') )
 @php( $password_reset_url = View::getSection('password_reset_url') ?? config('adminlte.password_reset_url',
@@ -95,11 +165,11 @@
 @endif
 
 {{-- Register link --}}
-@if($register_url)
+{{-- @if($register_url)
 <p class="my-0">
     <a href="{{ $register_url }}">
         {{ __('adminlte::adminlte.register_a_new_membership') }}
     </a>
 </p>
-@endif
-@stop
+@endif --}}
+@stop`

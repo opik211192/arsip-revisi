@@ -19,11 +19,24 @@ class UserDataController extends Controller
 
     public function index()
     {
-        $users = User::all();
+        $authUser = auth()->user();
+
+        // Jika role super admin atau admin -> tampilkan semua user
+        if ($authUser->hasRole('super admin') || $authUser->hasRole('admin')) {
+            $users = User::with(['struktural', 'struktural_detail'])->get();
+        } else {
+            // Selain itu hanya tampilkan dirinya sendiri
+            $users = User::with(['struktural', 'struktural_detail'])
+                        ->where('id', $authUser->id)
+                        ->get();
+        }
+
         $strukturals = Struktural::all();
         $struktural_detail = Struktural_detail::all();
+
         return view('auth.user', compact('users', 'strukturals', 'struktural_detail'));
     }
+
 
     public function create()
     {
