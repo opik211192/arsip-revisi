@@ -141,7 +141,7 @@ Auth::user()->roles->pluck('name')->contains('admin'))
 
     $('#table-datatable').DataTable({
         searchDelay: 1000,
-        processing: false,
+        processing: true,
         serverSide: true,
         ajax: "{{ route('arsip.data') }}",
         columns: isAdmin ? [
