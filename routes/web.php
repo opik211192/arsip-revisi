@@ -87,6 +87,9 @@ Route::middleware('has.role')->group(function(){
         Route::get('/{arsipDraft}/upload', [ArsipDraftController::class, 'upload'])->name('upload');
 
         // 📥 Upload file via AJAX (JSON)
+        Route::post('/upload/tmp', [ArsipDraftController::class, 'uploadTmp'])->name('uploadTmp');
+        Route::post('/delete-tmp', [ArsipDraftController::class, 'deleteTmp'])->name('deleteTmp');
+
         Route::post('/{arsipDraft}/upload', [ArsipDraftController::class, 'storeUpload'])->name('storeUpload');
         
 

@@ -6,6 +6,7 @@ use App\Models\Jenis;
 use App\Models\ArsipDraft;
 use App\Models\JenisArsip;
 use App\Models\Struktural;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Models\ArsipDraftUpload;
@@ -13,6 +14,8 @@ use App\Models\Struktural_detail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
+use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
 
 class ArsipDraftController extends Controller
 {
@@ -30,15 +33,16 @@ class ArsipDraftController extends Controller
             $columns = [
                 0 => 'id',
                 1 => 'uraian_arsip',
-                2 => 'no_berkas',
+                2 => 'tahun',
                 3 => 'no_box',
-                4 => 'jenis_id',
-                5 => 'jenis_arsip_id',
-                6 => 'id_pencipta_arsip',
-                7 => 'created_by',
-                8 => 'updated_by',
-                9 => 'updated_at',
-                10 => 'status',
+                4 => 'no_berkas',
+                5 => 'jenis_id',
+                6 => 'jenis_arsip_id',
+                7 => 'id_pencipta_arsip',
+                8 => 'created_by',
+                9 => 'updated_by',
+                10 => 'updated_at',
+                11 => 'status',
             ];
 
             $limit = $request->input('length');
@@ -48,7 +52,7 @@ class ArsipDraftController extends Controller
             $search = $request->input('search.value');
 
             $query = ArsipDraft::select([
-                'id', 'uraian_arsip', 'no_berkas', 'no_box', 'jenis_id', 'jenis_arsip_id',
+                'id', 'uraian_arsip', 'tahun', 'no_berkas', 'no_box', 'jenis_id', 'jenis_arsip_id',
                 'id_pencipta_arsip', 'created_by', 'updated_by', 'updated_at', 'status'
             ])
             ->with([
@@ -68,6 +72,7 @@ class ArsipDraftController extends Controller
             if (!empty($search)) {
                 $query->where(function ($q) use ($search) {
                     $q->where('uraian_arsip', 'like', "%{$search}%")
+                        ->orWhere('tahun', 'like', "%{$search}%")
                         ->orWhere('no_berkas', 'like', "%{$search}%")
                         ->orWhere('no_box', 'like', "%{$search}%")
                         ->orWhere('status', 'like', "%{$search}%")
@@ -93,6 +98,7 @@ class ArsipDraftController extends Controller
             foreach ($arsips as $index => $arsip) {
                 $nestedData['DT_RowIndex'] = $start + $index + 1;
                 $nestedData['uraian_arsip'] = $arsip->uraian_arsip ?? '-';
+                $nestedData['tahun'] = $arsip->tahun ?? '-';
                 $nestedData['no_berkas'] = $arsip->no_berkas ?? '-';
                 $nestedData['no_box'] = $arsip->no_box ?? '-';
                 $nestedData['jenis'] = $arsip->jenis->name ?? '-';
@@ -101,7 +107,7 @@ class ArsipDraftController extends Controller
                 $nestedData['created_by'] = $arsip->createdBy->name ?? '-';
                 $nestedData['updated_by'] = $arsip->updatedBy->name ?? '-';
                 $nestedData['updated_at'] = $arsip->updated_at ? $arsip->updated_at->format('Y-m-d H:i') : '-';
-                $nestedData['status'] = $arsip->status == 0 ? '<span class="badge bg-secondary">Draft</span>' : '<span class="badge bg-success">Final</span>';
+                $nestedData['status'] = $arsip->status;
 
                 // 🔹 Tombol aksi (sementara disesuaikan dengan arsip_draft)
                 $nestedData['action'] = '
@@ -114,15 +120,12 @@ class ArsipDraftController extends Controller
                             <i class="fa fa-edit"></i>
                         </a>
 
-                        <form action="'.route('arsip_draft.destroy', $arsip->id).'" method="POST" 
-                            style="display:inline-block;" 
-                            onsubmit="return confirm(\'Yakin ingin menghapus data ini?\')">
-                            <input type="hidden" name="_token" value="'.csrf_token().'">
-                            <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit" class="btn btn-danger btn-sm" title="Hapus">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </form>
+                        <button type="button" class="btn btn-danger btn-sm btn-delete" 
+                            data-id="'.$arsip->id.'" 
+                            title="Hapus Arsip">
+                            <i class="fa fa-trash"></i>
+                        </button>
+
                     </div>
                 ';
 
@@ -229,48 +232,116 @@ class ArsipDraftController extends Controller
     //     ]);
     // }
 
+    public function uploadTmp(Request $request)
+    {
+        try {
+            $receiver = new FileReceiver("file", $request, HandlerFactory::classFromRequest($request));
+
+            if (!$receiver->isUploaded()) {
+                return response()->json(['success' => false, 'message' => 'No file uploaded'], 400);
+            }
+
+            $save = $receiver->receive();
+
+            if ($save->isFinished()) {
+                $file = $save->getFile();
+
+                // 🔹 Gunakan timestamp ringan dan nama yang rapi
+                $timestamp = now()->format('YmdHis');
+                $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $extension = $file->getClientOriginalExtension();
+
+                $namaFile = "{$timestamp}-" . Str::slug($originalName) . ".{$extension}";
+
+                // simpan ke tmp/
+                $path = $file->storeAs('tmp', $namaFile);
+                @unlink($file->getPathname());
+
+                return response()->json([
+                    'success' => true,
+                    'tmp_path' => $path,
+                    'file_name' => $namaFile
+                ]);
+            }
+
+            $handler = $save->handler();
+            return response()->json(['success' => true, 'done' => $handler->getPercentageDone()]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'line' => $e->getLine()
+            ], 500);
+        }
+    }
+
+
+    public function deleteTmp(Request $request)
+    {
+        $path = $request->tmp_path;
+        if ($path && Storage::exists($path)) {
+            Storage::delete($path);
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false]);
+    }
+
+
+
     public function storeUpload(Request $request, ArsipDraft $arsipDraft)
     {
         $request->validate([
-            'file_arsip' => 'required|file|max:2048000|mimes:pdf,doc,docx,xls,xlsx',
-            'no_item'    => 'nullable|string',
+            'tmp_path' => 'required|string',
+            'no_item' => 'nullable|string',
             'keterangan' => 'nullable|string',
         ]);
 
-        // 🔹 Struktur folder penyimpanan
-        $tahun     = $arsipDraft->tahun;
-        $jenisName = str_replace([' ', '/'], '-', optional($arsipDraft->jenis)->name ?? 'Umum');
-        $pencipta  = str_replace([' ', '/'], '-', optional($arsipDraft->struktural_detail)->name ?? 'Unknown');
-        $basePath  = "upload/{$tahun}/{$jenisName}/{$pencipta}";
+        // 🔹 Pastikan file sementara ada
+        if (!\Storage::exists($request->tmp_path)) {
+            return response()->json(['success' => false, 'message' => 'File temporary tidak ditemukan.']);
+        }
 
-        $file = $request->file('file_arsip');
-        $now  = now()->format('YmdHis');
-        $namaFile = "{$now}-{$pencipta}-" . str_replace(' ', '-', $file->getClientOriginalName());
+        // 🔹 Ambil relasi struktural
+        $detail = $arsipDraft->struktural_detail;
+        $strukturUtama  = str_replace([' ', '/', '\\'], '-', optional($detail->struktural)->name ?? 'Unknown');
+        $strukturDetail = str_replace([' ', '/', '\\'], '-', $detail->name ?? 'Unknown-Detail');
+        $tahun          = $arsipDraft->tahun ?? date('Y');
+        $jenisName      = str_replace([' ', '/', '\\'], '-', optional($arsipDraft->jenis)->name ?? 'Umum');
 
-        // ✅ Simpan langsung ke storage/app/upload/{tahun}/{jenis}/{pencipta}
-        $path = $file->storeAs($basePath, $namaFile);
+        // 🔹 Tentukan folder tujuan
+        $basePath = "upload/{$strukturUtama}/{$strukturDetail}/{$tahun}/{$jenisName}";
+
+        // 🔹 Pastikan foldernya ada
+        \Storage::makeDirectory($basePath);
+
+        // 🔹 Ambil nama file asli dari tmp_path
+        $fileName = basename($request->tmp_path);
+        $finalPath = "{$basePath}/{$fileName}";
+
+        // 🔹 Pindahkan dari tmp ke folder final
+        \Storage::move($request->tmp_path, $finalPath);
 
         // 🔹 Simpan ke database
         $upload = ArsipDraftUpload::create([
             'arsip_draft_id' => $arsipDraft->id,
-            'file_path'      => $path,
+            'file_path'      => $finalPath,
             'no_item'        => $request->no_item,
             'keterangan'     => $request->keterangan,
         ]);
 
+        // 🔹 Balikan respon JSON
         return response()->json([
             'success' => true,
-            'message' => 'File berhasil diupload!',
+            'message' => '✅ File berhasil disimpan ke folder final!',
             'file' => [
-                'id'          => $upload->id,
-                'file_name'   => $namaFile,
-                'no_item'     => $upload->no_item,
-                'keterangan'  => $upload->keterangan,
-                'uploaded_at' => $upload->created_at->format('d-m-Y H:i'),
-                'download_url'=> route('arsip_draft.download', $upload->id),
-            ],
+                'id'           => $upload->id,
+                'file_name'    => $fileName,
+                'download_url' => route('arsip_draft.download', $upload->id),
+                'path'         => $finalPath,
+            ]
         ]);
     }
+
 
 
 
@@ -355,8 +426,14 @@ class ArsipDraftController extends Controller
      */
     public function edit(ArsipDraft $arsipDraft)
     {
-        //
+        $jeniss = Jenis::all();
+        $jenis_arsip = JenisArsip::all();
+        $strukturals = Struktural_detail::with('struktural')->get();
+        $models = $strukturals->groupBy('struktural.name');
+
+        return view('arsip_draft.edit', compact('arsipDraft', 'jeniss', 'jenis_arsip', 'models'));
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -367,8 +444,77 @@ class ArsipDraftController extends Controller
      */
     public function update(Request $request, ArsipDraft $arsipDraft)
     {
-        //
+        $request->validate([
+            'jenis_arsip_id'    => 'required|integer',
+            'jenis_id'          => 'required|integer',
+            'id_pencipta_arsip' => 'required|integer',
+            'lokasi_arsip'      => 'required|string|max:255',
+            'no_berkas'         => 'required|string|max:50',
+            'no_box'            => 'required|string|max:50',
+            'tahun'             => 'required|integer',
+            'uraian_arsip'      => 'required|string|max:255',
+        ]);
+
+        // 🧩 Simpan nilai lama dulu untuk deteksi perubahan
+        $oldTahun = $arsipDraft->tahun;
+        $oldJenis = optional($arsipDraft->jenis)->name;
+        $oldDetail = $arsipDraft->struktural_detail;
+        $oldStrukturUtama = str_replace([' ', '/', '\\'], '-', optional($oldDetail->struktural)->name ?? 'Unknown');
+        $oldStrukturDetail = str_replace([' ', '/', '\\'], '-', $oldDetail->name ?? 'Unknown-Detail');
+
+        // 🧩 Update data utama arsip draft
+        $arsipDraft->update([
+            'jenis_arsip_id'    => $request->jenis_arsip_id,
+            'jenis_id'          => $request->jenis_id,
+            'id_pencipta_arsip' => $request->id_pencipta_arsip,
+            'lokasi_arsip'      => $request->lokasi_arsip,
+            'no_berkas'         => $request->no_berkas,
+            'no_box'            => $request->no_box,
+            'tahun'             => $request->tahun,
+            'uraian_arsip'      => $request->uraian_arsip,
+            'updated_by'        => Auth::id(),
+        ]);
+
+        // 🔄 Refresh relasi biar data baru ke-load
+        $arsipDraft->refresh();
+
+        // 🔹 Ambil relasi baru setelah refresh
+        $newDetail = $arsipDraft->struktural_detail;
+        $newStrukturUtama  = str_replace([' ', '/', '\\'], '-', optional($newDetail->struktural)->name ?? 'Unknown');
+        $newStrukturDetail = str_replace([' ', '/', '\\'], '-', $newDetail->name ?? 'Unknown-Detail');
+        $newTahun          = $arsipDraft->tahun ?? date('Y');
+        $newJenisName      = str_replace([' ', '/', '\\'], '-', optional($arsipDraft->jenis)->name ?? 'Umum');
+
+        // 🔹 Tentukan base path baru
+        $newBasePath = "upload/{$newStrukturUtama}/{$newStrukturDetail}/{$newTahun}/{$newJenisName}";
+
+        // Pastikan folder baru dibuat di disk default/public
+        if (!Storage::exists($newBasePath)) {
+            Storage::makeDirectory($newBasePath, 0775, true);
+        }
+
+        // 🔹 Jika tahun, jenis, atau pencipta berubah → pindahkan file
+        if ($oldTahun != $newTahun || $oldJenis != $newJenisName || $oldStrukturDetail != $newStrukturDetail) {
+            foreach ($arsipDraft->uploads as $upload) {
+                $oldPath = $upload->file_path;
+                if (Storage::exists($oldPath)) {
+                    $fileName = basename($oldPath);
+                    $newPath = "{$newBasePath}/{$fileName}";
+
+                    // 🚚 Pindahkan file fisik
+                    Storage::move($oldPath, $newPath);
+
+                    // 📝 Update path di database
+                    $upload->update(['file_path' => $newPath]);
+                }
+            }
+        }
+
+        return redirect()
+            ->route('arsip_draft.index')
+            ->with('success', '✅ Data arsip berhasil diperbarui dan file berhasil dipindahkan ke folder baru.');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -378,6 +524,31 @@ class ArsipDraftController extends Controller
      */
     public function destroy(ArsipDraft $arsipDraft)
     {
-        //
+        try {
+            // 🔹 Ambil semua file upload yang terkait
+            $uploads = $arsipDraft->uploads; // pastikan relasi ArsipDraft -> ArsipDraftUpload sudah ada
+
+            foreach ($uploads as $upload) {
+                if (\Storage::exists($upload->file_path)) {
+                    \Storage::delete($upload->file_path); // hapus file fisik
+                }
+                $upload->delete(); // hapus dari database
+            }
+
+            // 🔹 Hapus arsip utama
+            $arsipDraft->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => '🗑️ Arsip draft dan seluruh file terkait berhasil dihapus!'
+            ]);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus arsip: ' . $e->getMessage()
+            ], 500);
+        }
     }
+
 }
