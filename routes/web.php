@@ -5,10 +5,11 @@ use App\Http\Controllers\CobaController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\JenisController;
 use App\Http\Controllers\UserDataController;
+use App\Http\Controllers\ArsipDraftController;
+use App\Http\Controllers\JenisArsipController;
 use App\Http\Controllers\StrukturalController;
 use App\Http\Controllers\Arsip\ArsipController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\JenisArsipController;
 use App\Http\Controllers\Permissions\RoleController;
 use App\Http\Controllers\Permissions\UserController;
 use App\Http\Controllers\Permissions\AssignController;
@@ -34,11 +35,24 @@ Route::get('/', function () {
 
 //route filter utk percobaan
 Route::get('coba', [CobaController::class, 'index'])->name('coba.index');
+Route::get('/php-info', function() {
+    return [
+        'upload_max_filesize' => ini_get('upload_max_filesize'),
+        'post_max_size' => ini_get('post_max_size'),
+        'max_execution_time' => ini_get('max_execution_time'),
+        'memory_limit' => ini_get('memory_limit'),
+    ];
+});
+
 
 //Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 //Auth::routes();
-Auth::routes(['register' => false]);
+Auth::routes([
+    'register' => false,
+    'verify' => true,
+]);
+
 
 Route::get('/user/data', [UserDataController::class, 'index'])->name('user.data');
 Route::get('/user/create', [UserDataController::class, 'create'])->name('user.create');
@@ -55,6 +69,46 @@ Route::post('/user/alldata', [RegisterController::class,'ambilData'])->name('amb
 
 Route::middleware('has.role')->group(function(){
     Route::view('dashboard', 'dashboard')->name('dashboard');
+
+    Route::get('/dashboard/data', [App\Http\Controllers\HomeController::class, 'getDashboardData'])->name('dashboard.data');
+
+    //Route Arsip Draft
+    Route::prefix('arsip-draft')->name('arsip_draft.')->group(function () {
+        // 📄 List data arsip draft (datatable AJAX)
+        Route::get('/', [ArsipDraftController::class, 'index'])->name('index');
+
+        // ➕ Form tambah data baru
+        Route::get('/create', [ArsipDraftController::class, 'create'])->name('create');
+
+        // 💾 Simpan data arsip
+        Route::post('/store', [ArsipDraftController::class, 'store'])->name('store');
+
+        // 📤 Halaman upload file arsip (setelah input data)
+        Route::get('/{arsipDraft}/upload', [ArsipDraftController::class, 'upload'])->name('upload');
+
+        // 📥 Upload file via AJAX (JSON)
+        Route::post('/{arsipDraft}/upload', [ArsipDraftController::class, 'storeUpload'])->name('storeUpload');
+        
+
+       Route::get('/{arsipDraft}/uploads', [ArsipDraftController::class, 'getUploads'])->name('getUploads');
+
+        // 📂 Download file secara aman (privat)
+        Route::get('/download/{upload}', [ArsipDraftController::class, 'download'])->name('download');
+
+        // ✅ Hapus file upload
+        Route::delete('/upload/{upload}', [ArsipDraftController::class, 'deleteUpload'])->name('deleteUpload');
+
+        // ✅ Update data file (no_item / keterangan)
+        Route::put('/upload/{upload}', [ArsipDraftController::class, 'updateUpload'])->name('updateUpload');
+
+
+        // ⚙️ (Optional) Edit, Update, Delete
+        Route::get('/{arsipDraft}/edit', [ArsipDraftController::class, 'edit'])->name('edit');
+        Route::put('/{arsipDraft}', [ArsipDraftController::class, 'update'])->name('update');
+        Route::delete('/{arsipDraft}', [ArsipDraftController::class, 'destroy'])->name('destroy');
+    });
+
+
     
     //Route untuk arsip
     Route::prefix('arsip')->group(function(){
@@ -68,6 +122,14 @@ Route::middleware('has.role')->group(function(){
         Route::delete('/data/{arsip}', [ArsipController::class, 'destroy'])->name('arsip.delete');
         Route::get('/approval/{arsip}', [ArsipController::class, 'approval'])->name('arsip.approval');
         Route::put('/approval/{arsip}', [ArsipController::class, 'approvalupdate']);
+
+         // 📎 File tambahan (multi upload)
+        Route::get('/download-file/{id}', [ArsipController::class, 'downloadFile'])->name('arsip.downloadFile');
+        Route::get('/arsip/view-file/{id}', [ArsipController::class, 'viewFile'])->name('arsip.viewFile');
+        Route::delete('/delete-file/{id}', [ArsipController::class, 'deleteFile'])->name('arsip.deleteFile');
+
+        Route::post('/upload-temp', [ArsipController::class, 'uploadTemp'])->name('arsip.upload-temp');
+        Route::post('/delete-temp', [ArsipController::class, 'deleteTemp'])->name('arsip.delete-temp');
 
 
     });
