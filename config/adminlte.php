@@ -262,11 +262,11 @@ return [
             'submenu' => [
                 [
                     'text' => 'Buat Arsip',
-                    'route'  => 'arsip.index',
+                    'route'  => 'arsip_draft.create',
                 ],
                 [
                     'text'    => 'Data Arsip',
-                    'route'     => 'arsip.data',
+                    'route'     => 'arsip_draft.index',
                 ],
             ],
         ],

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Data Arsip Draft')
+@section('title', 'Data Arsip')
 
 @section('styles2')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
@@ -52,7 +52,7 @@
 
 <div class="card">
     <div class="card-header bg-gradient-dark text-white">
-        <span><i class="fas fa-archive"></i> Data Arsip Draft</span>
+        <span><i class="fas fa-archive"></i> Data Arsip</span>
         <a href="{{ route('arsip_draft.create') }}" class="btn btn-primary btn-sm float-right">
             <i class="fas fa-plus"></i> Tambah Arsip
         </a>

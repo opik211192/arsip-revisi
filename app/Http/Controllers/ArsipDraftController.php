@@ -112,15 +112,15 @@ class ArsipDraftController extends Controller
                 // 🔹 Tombol aksi (sementara disesuaikan dengan arsip_draft)
                 $nestedData['action'] = '
                     <div class="d-flex gap-1">
-                        <a href="'.route('arsip_draft.upload', $arsip->id).'" class="btn btn-success btn-sm" title="Upload File">
+                        <a href="'.route('arsip_draft.upload', $arsip->id).'" class="btn btn-outline-secondary btn-sm mr-1" title="Upload File">
                             <i class="fa fa-upload"></i>
                         </a>
 
-                        <a href="'.route('arsip_draft.edit', $arsip->id).'" class="btn btn-warning btn-sm" title="Edit Data">
+                        <a href="'.route('arsip_draft.edit', $arsip->id).'" class="btn btn-outline-secondary btn-sm mr-1" title="Edit Data">
                             <i class="fa fa-edit"></i>
                         </a>
 
-                        <button type="button" class="btn btn-danger btn-sm btn-delete" 
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-delete" 
                             data-id="'.$arsip->id.'" 
                             title="Hapus Arsip">
                             <i class="fa fa-trash"></i>

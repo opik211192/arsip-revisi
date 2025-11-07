@@ -73,7 +73,7 @@ Route::middleware('has.role')->group(function(){
     Route::get('/dashboard/data', [App\Http\Controllers\HomeController::class, 'getDashboardData'])->name('dashboard.data');
 
     //Route Arsip Draft
-    Route::prefix('arsip-draft')->name('arsip_draft.')->group(function () {
+    Route::prefix('arsip')->name('arsip_draft.')->group(function () {
         // 📄 List data arsip draft (datatable AJAX)
         Route::get('/', [ArsipDraftController::class, 'index'])->name('index');
 
@@ -114,28 +114,28 @@ Route::middleware('has.role')->group(function(){
 
     
     //Route untuk arsip
-    Route::prefix('arsip')->group(function(){
-        Route::get('', [ArsipController::class, 'index'])->name('arsip.index');
-        Route::post('', [ArsipController::class, 'store'])->name('arsip.store');
-        Route::get('/data', [ArsipController::class, 'data'])->name('arsip.data');
-        Route::get('/data/{arsip}/detail', [ArsipController::class, 'detail'])->name('arsip.detail');
-        Route::get('/data/{arsip}/download', [ArsipController::class, 'download'])->name('arsip.download');
-        Route::get('/edit/{arsip}', [ArsipController::class, 'edit'])->name('arsip.edit');
-        Route::put('/edit/{arsip}', [ArsipController::class, 'update']);
-        Route::delete('/data/{arsip}', [ArsipController::class, 'destroy'])->name('arsip.delete');
-        Route::get('/approval/{arsip}', [ArsipController::class, 'approval'])->name('arsip.approval');
-        Route::put('/approval/{arsip}', [ArsipController::class, 'approvalupdate']);
+    // Route::prefix('arsip')->group(function(){
+    //     Route::get('', [ArsipController::class, 'index'])->name('arsip.index');
+    //     Route::post('', [ArsipController::class, 'store'])->name('arsip.store');
+    //     Route::get('/data', [ArsipController::class, 'data'])->name('arsip.data');
+    //     Route::get('/data/{arsip}/detail', [ArsipController::class, 'detail'])->name('arsip.detail');
+    //     Route::get('/data/{arsip}/download', [ArsipController::class, 'download'])->name('arsip.download');
+    //     Route::get('/edit/{arsip}', [ArsipController::class, 'edit'])->name('arsip.edit');
+    //     Route::put('/edit/{arsip}', [ArsipController::class, 'update']);
+    //     Route::delete('/data/{arsip}', [ArsipController::class, 'destroy'])->name('arsip.delete');
+    //     Route::get('/approval/{arsip}', [ArsipController::class, 'approval'])->name('arsip.approval');
+    //     Route::put('/approval/{arsip}', [ArsipController::class, 'approvalupdate']);
 
-         // 📎 File tambahan (multi upload)
-        Route::get('/download-file/{id}', [ArsipController::class, 'downloadFile'])->name('arsip.downloadFile');
-        Route::get('/arsip/view-file/{id}', [ArsipController::class, 'viewFile'])->name('arsip.viewFile');
-        Route::delete('/delete-file/{id}', [ArsipController::class, 'deleteFile'])->name('arsip.deleteFile');
+    //      // 📎 File tambahan (multi upload)
+    //     Route::get('/download-file/{id}', [ArsipController::class, 'downloadFile'])->name('arsip.downloadFile');
+    //     Route::get('/arsip/view-file/{id}', [ArsipController::class, 'viewFile'])->name('arsip.viewFile');
+    //     Route::delete('/delete-file/{id}', [ArsipController::class, 'deleteFile'])->name('arsip.deleteFile');
 
-        Route::post('/upload-temp', [ArsipController::class, 'uploadTemp'])->name('arsip.upload-temp');
-        Route::post('/delete-temp', [ArsipController::class, 'deleteTemp'])->name('arsip.delete-temp');
+    //     Route::post('/upload-temp', [ArsipController::class, 'uploadTemp'])->name('arsip.upload-temp');
+    //     Route::post('/delete-temp', [ArsipController::class, 'deleteTemp'])->name('arsip.delete-temp');
 
 
-    });
+    // });
 
     //Route untuk setting jenis arsip
     Route::prefix('setting-jenis-klasifikasi')->group(function(){

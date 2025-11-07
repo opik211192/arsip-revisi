@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Buat Arsip Draft')
+@section('title', 'Buat Arsip')
 
 @section('styles')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
@@ -68,7 +68,7 @@
 <div class="col-lg-12 col-md-11 mx-auto">
     <div class="card">
         <div class="card-header bg-gradient-dark text-white">
-            <i class="fas fa-plus"></i> Formulir Arsip Draft
+            <i class="fas fa-plus"></i> Formulir Arsip
         </div>
 
         <div class="card-body">

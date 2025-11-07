@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Upload File Arsip Draft')
+@section('title', 'Upload File Arsip')
 
 @section('styles')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" rel="stylesheet">
@@ -132,13 +132,27 @@
             font-size: 13px;
         }
     }
+
+    div.dataTables_processing {
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        padding: 15px 30px;
+        font-size: 15px;
+        font-weight: 500;
+        color: #007bff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 </style>
 @endsection
 
 @section('content')
 <div class="card">
     <div class="card-header bg-gradient-dark text-white">
-        <i class="fas fa-file-upload"></i> Upload File Arsip Draft
+        <i class="fas fa-file-upload"></i> Upload File Arsip
         <a href="{{ route('arsip_draft.index') }}" class="btn btn-secondary btn-sm float-right">
             <i class="fas fa-arrow-left"></i> Kembali
         </a>
@@ -262,6 +276,22 @@
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 
 <script>
+    // Fungsi kecil untuk aktifkan spinner di tombol
+    function showButtonSpinner(button) {
+        const icon = $(button).find("i");
+        icon.data("old-class", icon.attr("class"));
+        icon.attr("class", "fas fa-spinner fa-spin");
+        $(button).prop("disabled", true);
+    }
+
+    // Fungsi untuk matikan spinner dan kembalikan ikon semula
+    function hideButtonSpinner(button) {
+        const icon = $(button).find("i");
+        const oldClass = icon.data("old-class");
+        if (oldClass) icon.attr("class", oldClass);
+        $(button).prop("disabled", false);
+    }
+
     $(function () {
     // === DataTable init ===
     let table = $('#fileList').DataTable({
@@ -269,12 +299,24 @@
         searching: true,
         ordering: true,
         order: [[0, 'asc']],
+        processing: true, // 🔹 aktifkan spinner bawaan DataTables
+        language: {
+        processing: '<i class="fas fa-spinner fa-spin text-primary"></i> Memuat data...',
+        emptyTable: "Belum ada data file yang diupload."
+        },
         columnDefs: [
             { width: "70px", targets: 0 },   // 🔹 kolom "No Item"
             { width: "30%", targets: 1 },    // Nama File (opsional)
             { width: "25%", targets: 2 },    // Keterangan (opsional)
             { width: "20%", targets: 3 },    // Diunggah Pada (opsional)
             { width: "15%", targets: 4 }     // Aksi
+        ],
+         columnDefs: [
+            { width: "70px", targets: 0, className: "text-center" },
+            { width: "30%", targets: 1 },
+            { width: "25%", targets: 2 },
+            { width: "20%", targets: 3, className: "text-center" },
+            { width: "15%", targets: 4, className: "text-center" }
         ],
         columns: [
             { data: 'no_item' },
@@ -296,12 +338,21 @@
                         file_name: file.file_name,
                         keterangan: file.keterangan ?? '-',
                         uploaded_at: file.uploaded_at,
-                        actions: `<a href="${file.download_url}" class="btn btn-sm btn-success"><i class="fas fa-download"></i></a>
-                                  <button class="btn btn-sm btn-danger delete-upload" data-id="${file.id}"><i class="fas fa-trash"></i></button>`
+                        actions: `
+                        <div class="d-flex justify-content-center gap-2">
+                            <a href="${file.download_url}" class="btn btn-outline-success btn-sm mr-1 btn-download" title="Download File">
+                                <i class="fas fa-download"></i>
+                            </a>
+                            <button class="btn btn-outline-danger btn-sm delete-upload" data-id="${file.id}" title="Hapus File">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        `
                     });
                 });
             }
             table.draw();
+            table.processing(false);
         });
     }
 
@@ -469,7 +520,7 @@
         const tmp_path = $('#tmp_path').val();
         const no_item = $('input[name="no_item"]').val().trim();
         const keterangan = $('textarea[name="keterangan"]').val().trim();
-
+        showButtonSpinner(uploadButton);
         // 🔸 Validasi file upload
         if (!tmp_path) {
             alert('⚠️ Silakan pilih dan upload file terlebih dahulu.');
@@ -505,6 +556,7 @@
 
         $.post("{{ route('arsip_draft.storeUpload', $arsipDraft->id) }}", data, function (res) {
             if (res.success) {
+                hideButtonSpinner(uploadButton);
                 // Reset form
                 $('#uploadForm')[0].reset();
                 $('#tmp_path').val('');
@@ -539,6 +591,7 @@
                     .delay(3000).fadeOut('slow');
             }
         }).fail(() => {
+            hideButtonSpinner(uploadButton);
             alert('❌ Gagal menyimpan file.');
             uploadButton.prop('disabled', false);
         });
@@ -547,11 +600,12 @@
 
     // 🗑️ Delete file dari DataTable
      $(document).on('click', '.delete-upload', function () {
+        const btn = $(this);
         const id = $(this).data('id');
         if (!confirm('Yakin ingin menghapus file ini?')) return;
 
         $.ajax({
-            url: "{{ url('/arsip-draft/upload') }}/" + id,
+            url: "{{ route('arsip_draft.deleteUpload', '') }}/" + id,
             type: 'DELETE',
             data: { _token: "{{ csrf_token() }}" },
             success: function (res) {
@@ -566,6 +620,20 @@
             }
         });
     });
+
+    $(document).on('click', '.btn-download', function (e) {
+        const btn = $(this);
+        showButtonSpinner(btn);
+
+        // kasih delay kecil biar spinner terlihat sebelum download dimulai
+        setTimeout(() => {
+            window.location.href = btn.attr('href');
+            hideButtonSpinner(btn);
+        }, 600);
+
+        e.preventDefault(); // cegah langsung reload page
+    });
+
 
 });
 </script>
