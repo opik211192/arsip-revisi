@@ -60,6 +60,26 @@
 </style>
 @endsection
 
+@section('content_header')
+<div class="content-header-custom">
+    <div class="d-flex flex-column align-items-start">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb custom-breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ route('home') }}">
+                        <i class="fas fa-home me-1"></i> Dashboard
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ route('arsip_draft.index') }}">Data Arsip</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Tambah Arsip</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+@stop
+
 @section('content')
 @if (session('success'))
 <div class="alert alert-success">{{ session('success') }}</div>
@@ -68,7 +88,7 @@
 <div class="col-lg-12 col-md-11 mx-auto">
     <div class="card">
         <div class="card-header bg-gradient-dark text-white">
-            <i class="fas fa-plus"></i> Formulir Arsip
+            <i class="fas fa-plus"></i> Tambah Arsip
         </div>
 
         <div class="card-body">

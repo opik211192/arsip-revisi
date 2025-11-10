@@ -149,6 +149,26 @@
 </style>
 @endsection
 
+@section('content_header')
+<div class="content-header-custom">
+    <div class="d-flex flex-column align-items-start">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb custom-breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ route('home') }}">
+                        <i class="fas fa-home me-1"></i> Dashboard
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ route('arsip_draft.index') }}"> <i class="fas fa-archive me-1"></i> Data Arsip</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page"> Upload Arsip</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+@stop
+
 @section('content')
 <div class="card">
     <div class="card-header bg-gradient-dark text-white">
@@ -229,7 +249,7 @@
                 </div>
 
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary btn-sm w-100">
+                    <button type="submit" class="btn btn-info btn-sm w-100 ">
                         <i class="fas fa-save"></i> Simpan
                     </button>
                 </div>
@@ -302,7 +322,7 @@
         processing: true, // 🔹 aktifkan spinner bawaan DataTables
         language: {
         processing: '<i class="fas fa-spinner fa-spin text-primary"></i> Memuat data...',
-        emptyTable: "Belum ada data file yang diupload."
+        emptyTable: "Belum ada data arsip yang diupload."
         },
         columnDefs: [
             { width: "70px", targets: 0 },   // 🔹 kolom "No Item"

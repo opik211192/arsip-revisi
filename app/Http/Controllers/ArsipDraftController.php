@@ -115,6 +115,8 @@ class ArsipDraftController extends Controller
                         <a href="'.route('arsip_draft.upload', $arsip->id).'" class="btn btn-outline-secondary btn-sm mr-1" title="Upload File">
                             <i class="fa fa-upload"></i>
                         </a>
+                        
+                        <a href="'.route('arsip_draft.show', $arsip->id).'" class="btn btn-outline-primary btn-sm mr-1" title="Lihat Detail Arsip"><i class="fa fa-eye"></i></a>
 
                         <a href="'.route('arsip_draft.edit', $arsip->id).'" class="btn btn-outline-secondary btn-sm mr-1" title="Edit Data">
                             <i class="fa fa-edit"></i>
@@ -213,24 +215,6 @@ class ArsipDraftController extends Controller
         return view('arsip_draft.upload', compact('arsipDraft'));
     }
 
-    // public function uploadTmp(Request $request)
-    // {
-    //     $request->validate([
-    //         'file_arsip' => 'required|file|max:51200|mimes:pdf,doc,docx,xls,xlsx'
-    //     ]);
-
-    //     $file = $request->file('file_arsip');
-    //     $filename = now()->format('YmdHis') . '-' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
-
-    //     // simpan ke tmp dulu
-    //     $path = $file->storeAs('tmp', $filename);
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'tmp_path' => $path,
-    //         'file_name' => $filename,
-    //     ]);
-    // }
 
     public function uploadTmp(Request $request)
     {
@@ -413,10 +397,42 @@ class ArsipDraftController extends Controller
      * @param  \App\Models\ArsipDraft  $arsipDraft
      * @return \Illuminate\Http\Response
      */
-    public function show(ArsipDraft $arsipDraft)
+    public function show(ArsipDraft $arsip)
     {
-        //
+        dd($arsip);
+        $user = Auth::user();
+
+        // 🔹 Cek role super admin atau admin
+        $isAdmin = $user->hasAnyRole(['super admin', 'admin']);
+
+        // 🔒 Jika bukan admin, hanya boleh lihat arsip miliknya
+        if (!$isAdmin && $arsip->id_pencipta_arsip !== $user->struktural_detail_id) {
+            abort(403, 'Anda tidak memiliki izin untuk melihat arsip ini.');
+        }
+
+        // 🔹 Ambil data arsip lengkap dengan relasi
+        $data = ArsipDraft::with([
+            'user:id,name',
+            'jenis:id,name',
+            'jenis_arsip:id,name',
+            'struktural_detail:id,name,struktural_id',
+            'struktural_detail.struktural:id,name',
+            'uploads:id,arsip_draft_id,file_name,no_item,keterangan,created_at'
+        ])->findOrFail($arsip->id);
+
+        // 🔹 Ambil informasi struktural via relasi
+        $struktural = [
+            'struktural_detail' => optional($data->struktural_detail)->name,
+            'struktural' => optional($data->struktural_detail->struktural)->name,
+        ];
+
+        // 🔹 Ambil daftar file upload (relasi `uploads`)
+        $uploads = $data->uploads ?? collect();
+
+        return view('arsip_draft.detail', compact('data', 'struktural', 'uploads', 'isAdmin'));
     }
+
+
 
     /**
      * Show the form for editing the specified resource.

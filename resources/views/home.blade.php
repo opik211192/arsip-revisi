@@ -10,100 +10,116 @@
     --color-light: #f8f9fa;
   }
 
-  /* Efek hover list */
-  .list-item-hover:hover {
-    background-color: var(--color-light) !important;
-    transition: background 0.25s ease-in-out;
+  body {
+    background: linear-gradient(135deg, #f7f9fc, #eef2f7);
   }
 
-  /* Scrollbar */
-  .card-body::-webkit-scrollbar {
-    width: 6px;
+  .fade-in {
+    animation: fadeIn 0.6s ease-in-out;
   }
 
-  .card-body::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
-  .card-body::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(0, 0, 0, 0.4);
-  }
-
-  /* Badge gradasi */
-  .badge-gradient {
-    background: linear-gradient(135deg, #007bff, #00b894);
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #fff;
-    padding: 4px 10px;
-    border-radius: 8px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-  }
-
-  /* Small box modern */
   .small-box {
-    border-radius: 10px !important;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
-    transition: all 0.2s ease-in-out;
+    border-radius: 14px !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    transition: all 0.25s ease-in-out;
     overflow: hidden;
+    position: relative;
   }
 
   .small-box:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
   }
 
   .small-box .inner {
-    padding: 20px;
+    padding: 15px 15px 10px;
   }
 
   .small-box .inner h3 {
-    font-size: 2.2rem;
+    font-size: 1.4rem;
     font-weight: 700;
   }
 
   .small-box .inner p {
-    font-size: 1rem;
+    font-size: 0.85rem;
     margin-top: 4px;
     color: rgba(255, 255, 255, 0.9);
   }
 
   .small-box .icon {
-    top: 10px;
+    position: absolute;
+    top: 12px;
     right: 15px;
-    opacity: 0.3;
+    font-size: 45px;
+    opacity: 0.15;
   }
 
-  /* Tabel user */
-  .table-user td {
-    vertical-align: middle;
-    padding: 8px 10px;
+  .bg-gradient-lightblue {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
   }
 
-  .table-user strong {
-    color: var(--color-secondary);
+  .bg-gradient-dark {
+    background: linear-gradient(135deg, #343a40, #1d2124);
   }
 
-  /* Card header style */
+  .card {
+    border-radius: 14px !important;
+    overflow: hidden;
+  }
+
   .card-header {
     font-weight: 600;
     font-size: 1.05rem;
     border-bottom: none;
   }
 
-  /* Gradient untuk header */
-  .bg-gradient-primary {
-    background: linear-gradient(135deg, #007bff, #0062cc);
+  .badge-total {
+    background: linear-gradient(135deg, #007bff, #00b894);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 8px;
   }
 
-  /* Tampilan struktur list */
-  .struktur-title {
-    color: var(--color-secondary);
-    font-weight: 600;
-    border-left: 4px solid var(--color-primary);
-    padding-left: 8px;
-    margin-bottom: 6px;
+  .table {
+    font-size: 0.95rem;
+  }
+
+  .table tr:hover {
+    background-color: #f1f5ff;
+    transition: 0.3s;
+  }
+
+  .empty-text {
+    color: #999;
+    font-style: italic;
+  }
+
+  .chart-container {
+    position: relative;
+    height: 180px;
+    width: 180px;
+    margin: 0 auto;
+  }
+
+  .user-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 15px;
   }
 </style>
 @endpush
@@ -113,87 +129,153 @@
 @stop
 
 @section('content')
-<div class="card shadow-sm border-0">
-  <div class="card-header bg-gradient-dark text-white">
-    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
-  </div>
+<div class="fade-in">
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-gradient-dark text-white d-flex align-items-center">
+      <i class="fas fa-tachometer-alt me-2"></i>
+      <span>Dashboard</span>
+    </div>
 
-  <div class="card-body">
-    <div class="row g-4 mt-2">
-      {{-- 🔹 Jumlah Arsip per Unit Kerja --}}
-      <div class="col-md-8">
-        <div class="card shadow-sm border-0 h-100">
-          <div class="card-header bg-gradient-dark text-white d-flex align-items-center">
-
-            <h5 class="mb-0">Jumlah Arsip Unit Kerja</h5>
-          </div>
-
-          <div class="card-body p-3" style="max-height: 450px; overflow-y: auto;">
-            @foreach ($strukturals as $unitKerja => $details)
-            @php
-            $totalArsip = collect($details)->sum('jumlah');
-            @endphp
-
-            <div class="mb-4 border-bottom pb-3">
-              <h6 class="fw-bold text-dark d-flex justify-content-between align-items-center mb-2">
-                <span><i class="fas fa-folder me-1"></i> {{ $unitKerja }}</span>
-                <span class="badge bg-gradient-lightblue">Total: {{ $totalArsip }}</span>
-              </h6>
-
-              <div class="table-responsive">
-                <table class="table table-sm align-middle mb-0">
-                  <thead class="table-light">
-                    <tr>
-                      <th style="width: 5%">No.</th>
-                      <th>Detail</th>
-                      <th class="text-end" style="width: 15%">Jumlah</th>
-                      <th class="text-center" style="width: 25%">Update Terakhir</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($details as $index => $detail)
-                    @if ($detail->detail_name)
-                    <tr>
-                      <td class="text-center">{{ $loop->iteration }}</td>
-                      <td class="text-primary">{{ $detail->detail_name }}</td>
-                      <td class="text-end fw-bold">{{ $detail->jumlah }}</td>
-                      <td class="text-center text-muted">
-                        @if ($detail->terakhir_input)
-                        {{ \Carbon\Carbon::parse($detail->terakhir_input)->locale('id')->diffForHumans() }}
-                        <br>
-                        <small class="text-secondary">
-                          ({{ \Carbon\Carbon::parse($detail->terakhir_input)->format('d M Y H:i') }})
-                        </small>
-                        @else
-                        <span class="text-danger">Belum ada arsip</span>
-                        @endif
-                      </td>
-                    </tr>
-                    @endif
-                    @endforeach
-                  </tbody>
-                </table>
-              </div>
+    <div class="card-body">
+      <div class="row g-4 mt-2 align-items-stretch">
+        {{-- 🔹 Kiri: Tabel Arsip Unit Kerja --}}
+        <div class="col-md-8">
+          <div class="card shadow-sm border-0 h-100 fade-in">
+            <div class="card-header bg-gradient-dark text-white">
+              <h5 class="mb-0"><i class="fas fa-folder-open me-2"></i>Jumlah Arsip per Unit Kerja</h5>
             </div>
-            @endforeach
+
+            <div class="card-body p-3" style="max-height: 500px; overflow-y: auto;">
+              @forelse ($strukturals as $unitKerja => $details)
+              @php $totalArsip = collect($details)->sum('jumlah'); @endphp
+
+              <div class="mb-4 border-bottom pb-3">
+                <h6 class="fw-bold text-dark d-flex justify-content-between align-items-center mb-2">
+                  <span><i class="fas fa-building me-2 text-primary"></i> {{ $unitKerja }}</span>
+                  <span class="badge-total">Total: {{ $totalArsip }}</span>
+                </h6>
+
+                <div class="table-responsive">
+                  <table class="table table-sm align-middle mb-0">
+                    <thead>
+                      <tr>
+                        <th style="width: 5%">No</th>
+                        <th>Detail</th>
+                        <th class="text-end" style="width: 15%">Jumlah</th>
+                        <th class="text-center" style="width: 25%">Update Terakhir</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach ($details as $detail)
+                      @if ($detail->detail_name)
+                      <tr>
+                        <td class="text-center">{{ $loop->iteration }}</td>
+                        <td class="text-primary fw-semibold">{{ $detail->detail_name }}</td>
+                        <td class="text-end fw-bold">{{ $detail->jumlah }}</td>
+                        <td class="text-center text-muted">
+                          @if ($detail->terakhir_input)
+                          {{ \Carbon\Carbon::parse($detail->terakhir_input)->locale('id')->diffForHumans() }}
+                          <br>
+                          <small class="text-secondary">
+                            ({{ \Carbon\Carbon::parse($detail->terakhir_input)->format('d M Y H:i') }})
+                          </small>
+                          @else
+                          <span class="text-danger">Belum ada arsip</span>
+                          @endif
+                        </td>
+                      </tr>
+                      @endif
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              @empty
+              <div class="text-center py-5 empty-text">Belum ada data arsip yang ditampilkan.</div>
+              @endforelse
+            </div>
           </div>
         </div>
-      </div>
 
-      {{-- 🔹 Total Arsip Keseluruhan --}}
-      <div class="col-md-4">
-        <div class="small-box bg-gradient-lightblue">
-          <div class="inner text-center">
-            <h3 class="">{{ $allArsip }}</h3>
-            <p>Total Seluruh Arsip</p>
+        {{-- 🔹 Kanan: Total Arsip + Info Pengguna --}}
+        <div class="col-md-4">
+          {{-- Total Arsip --}}
+          <div class="small-box bg-gradient-lightblue text-white fade-in mb-3">
+            <div class="inner text-center">
+              <i class="fas fa-archive fa-lg mb-2"></i>
+              <h3 class="fw-bold mb-1" style="font-size: 1.3rem;">{{ $allArsip }} Boks</h3>
+              <p class="fs-6 mb-1">Total Seluruh Arsip</p>
+              <div class="progress mt-2" style="height: 5px;">
+                <div class="progress-bar bg-white" style="width: 75%; opacity: 0.6;"></div>
+              </div>
+            </div>
           </div>
-          <div class="icon">
-            <i class="fas fa-book"></i>
+
+          {{-- Info Pengguna --}}
+          <div class="user-card fade-in">
+            <div class="text-center mb-2">
+              <i class="fas fa-user-circle fa-2x text-primary mb-2"></i>
+              <h6 class="fw-bold mb-0">{{ Auth::user()->name }}</h6>
+              <small class="text-secondary">
+                <strong>{{ Auth::user()->struktural_detail->name ?: '-' }}</strong>
+              </small>
+            </div>
+            <hr>
+            {{-- 🔸 Role Admin/Superadmin --}}
+            @if (Auth::user()->hasRole('super admin') || Auth::user()->hasRole('admin'))
+            {{-- <div class="text-center">
+              <h6 class="fw-semibold mb-3 text-secondary">Persentase Arsip</h6>
+              <div class="chart-container">
+                <canvas id="donutChart"></canvas>
+              </div>
+            </div> --}}
+            {{-- 🔹 Role User --}}
+            @else
+            <div class="text-center py-3">
+              <i class="fas fa-upload fa-lg text-info mb-2"></i>
+              <h6>Arsip yang Anda Upload:</h6>
+              <h3 class="fw-bold text-primary mt-2">{{ $userArsip ?? 0 }} Boks</h3>
+            </div>
+            @endif
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
 @stop
+
+{{-- @push('js')
+@if (Auth::user()->hasRole('super admin') || Auth::user()->hasRole('admin'))
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('donutChart');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Arsip Aktif', 'Arsip Lama', 'Arsip Lainnya'],
+      datasets: [{
+        data: [60, 25, 15],
+        backgroundColor: ['#007bff', '#00b894', '#ff7675'],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      plugins: {
+        legend: {
+          display: true,
+          position: 'bottom'
+        }
+      },
+      animation: {
+        animateRotate: true,
+        animateScale: true,
+        duration: 1500
+      },
+      cutout: '70%',
+      responsive: true
+    }
+  });
+</script>
+@endif
+@endpush --}}

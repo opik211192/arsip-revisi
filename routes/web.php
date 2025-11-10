@@ -73,43 +73,56 @@ Route::middleware('has.role')->group(function(){
     Route::get('/dashboard/data', [App\Http\Controllers\HomeController::class, 'getDashboardData'])->name('dashboard.data');
 
     //Route Arsip Draft
+
     Route::prefix('arsip')->name('arsip_draft.')->group(function () {
-        // 📄 List data arsip draft (datatable AJAX)
-        Route::get('/', [ArsipDraftController::class, 'index'])->name('index');
+        /**
+         * =======================================================
+         * 🗂️ ROUTE DASAR CRUD ARSIP DRAFT
+         * =======================================================
+         */
+        Route::get('/', [ArsipDraftController::class, 'index'])->name('index');             // 📄 List data
+        Route::get('/create', [ArsipDraftController::class, 'create'])->name('create');     // ➕ Tambah data
+        Route::post('/store', [ArsipDraftController::class, 'store'])->name('store');       // 💾 Simpan data baru
 
-        // ➕ Form tambah data baru
-        Route::get('/create', [ArsipDraftController::class, 'create'])->name('create');
+        /**
+         * =======================================================
+         * 📤 UPLOAD FILE ARSIP
+         * =======================================================
+         */
+        Route::get('/{arsipDraft}/upload', [ArsipDraftController::class, 'upload'])->name('upload'); // Halaman upload
+        Route::post('/upload/tmp', [ArsipDraftController::class, 'uploadTmp'])->name('uploadTmp');    // Upload sementara
+        Route::post('/delete-tmp', [ArsipDraftController::class, 'deleteTmp'])->name('deleteTmp');    // Hapus file tmp
+        Route::post('/{arsipDraft}/upload', [ArsipDraftController::class, 'storeUpload'])->name('storeUpload'); // Simpan final
+        Route::get('/{arsipDraft}/uploads', [ArsipDraftController::class, 'getUploads'])->name('getUploads');   // Get list file
 
-        // 💾 Simpan data arsip
-        Route::post('/store', [ArsipDraftController::class, 'store'])->name('store');
+        /**
+         * =======================================================
+         * 📂 FILE MANAGEMENT (Download / Update / Delete)
+         * =======================================================
+         */
+        Route::get('/download/{upload}', [ArsipDraftController::class, 'download'])->name('download'); // Download file
+        Route::delete('/upload/{upload}', [ArsipDraftController::class, 'deleteUpload'])->name('deleteUpload'); // Delete file
+        Route::put('/upload/{upload}', [ArsipDraftController::class, 'updateUpload'])->name('updateUpload');     // Update file info
 
-        // 📤 Halaman upload file arsip (setelah input data)
-        Route::get('/{arsipDraft}/upload', [ArsipDraftController::class, 'upload'])->name('upload');
+        /**
+         * =======================================================
+         * ⚙️ EDIT / UPDATE / DELETE DATA ARSIP
+         * =======================================================
+         */
+        Route::get('/{arsipDraft}/edit', [ArsipDraftController::class, 'edit'])->name('edit');   // Form edit
+        Route::put('/{arsipDraft}', [ArsipDraftController::class, 'update'])->name('update');    // Simpan perubahan
+        Route::delete('/{arsipDraft}', [ArsipDraftController::class, 'destroy'])->name('destroy'); // Hapus arsip
 
-        // 📥 Upload file via AJAX (JSON)
-        Route::post('/upload/tmp', [ArsipDraftController::class, 'uploadTmp'])->name('uploadTmp');
-        Route::post('/delete-tmp', [ArsipDraftController::class, 'deleteTmp'])->name('deleteTmp');
-
-        Route::post('/{arsipDraft}/upload', [ArsipDraftController::class, 'storeUpload'])->name('storeUpload');
-        
-
-       Route::get('/{arsipDraft}/uploads', [ArsipDraftController::class, 'getUploads'])->name('getUploads');
-
-        // 📂 Download file secara aman (privat)
-        Route::get('/download/{upload}', [ArsipDraftController::class, 'download'])->name('download');
-
-        // ✅ Hapus file upload
-        Route::delete('/upload/{upload}', [ArsipDraftController::class, 'deleteUpload'])->name('deleteUpload');
-
-        // ✅ Update data file (no_item / keterangan)
-        Route::put('/upload/{upload}', [ArsipDraftController::class, 'updateUpload'])->name('updateUpload');
-
-
-        // ⚙️ (Optional) Edit, Update, Delete
-        Route::get('/{arsipDraft}/edit', [ArsipDraftController::class, 'edit'])->name('edit');
-        Route::put('/{arsipDraft}', [ArsipDraftController::class, 'update'])->name('update');
-        Route::delete('/{arsipDraft}', [ArsipDraftController::class, 'destroy'])->name('destroy');
+        /**
+         * =======================================================
+         * 🔍 DETAIL ARSIP (SHOW)
+         * =======================================================
+         * ⚠️ Harus diletakkan PALING AKHIR agar tidak bentrok
+         * dengan route seperti /create atau /upload
+         */
+        Route::get('/show/{arsipDraft}', [ArsipDraftController::class, 'show'])->name('show');
     });
+
 
 
     

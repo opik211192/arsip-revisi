@@ -60,6 +60,26 @@
 </style>
 @endsection
 
+@section('content_header')
+<div class="content-header-custom">
+    <div class="d-flex flex-column align-items-start">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb custom-breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ route('home') }}">
+                        <i class="fas fa-home me-1"></i> Dashboard
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ route('arsip_draft.index') }}"> <i class="fas fa-archive me-1"></i> Data Arsip</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Edit Arsip</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+@stop
+
 @section('content')
 @if (session('success'))
 <div class="alert alert-success">{{ session('success') }}</div>
