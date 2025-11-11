@@ -2,226 +2,299 @@
 
 @section('title', 'Detail Arsip')
 
-@section('content')
-
-@section('styles')
+@push('css')
 <style>
+    .card {
+        border-radius: 12px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
     #t {
         font-weight: bold;
+        width: 200px;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+    .badge-status {
+        font-size: 0.85rem;
+        padding: 6px 10px;
+        border-radius: 8px;
+    }
+
+    .badge-warning {
+        background-color: #ffc107 !important;
+        color: #222;
+    }
+
+    .badge-success {
+        background-color: #28a745 !important;
+    }
+
+    .badge-danger {
+        background-color: #dc3545 !important;
+    }
+
+    .file-box {
+        background: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.95rem;
+    }
+
+    .file-box i {
+        color: #007bff;
+    }
+
+    .file-box span {
+        flex-grow: 1;
+        margin-left: 10px;
+    }
+
+    .btn {
+        border-radius: 6px;
+    }
+
+    .spinner-border {
+        width: 1rem;
+        height: 1rem;
+        border-width: 2px;
     }
 </style>
-@endsection
-<div class="col-12">
-    <div class="card mb-4">
-        <div class="card-header bg-dark">Detail </div>
-        <div class="card-body">
-            <table class="table table-striped">
-                <tbody>
-                    <tr>
-                        <td id="t" class="col-sm-3">Jenis Arsip</td>
-                        <td>:</td>
-                        <td>{{ $data->jenis_arsip->name }}</td>
-                    </tr>
-                    {{-- <tr>
-                        <td id="t">Judul Arsip</td>
-                        <td>:</td>
-                        <td>{{ $data->judul_arsip }}</td>
-                    </tr> --}}
-                    <tr>
-                        <td id="t">No. Berkas</td>
-                        <td>:</td>
-                        <td>{{ $data->no_berkas }}</td>
-                    </tr>
-                    <tr>
-                        <td id="t">No. Box</td>
-                        <td>:</td>
-                        <td>{{ $data->no_box }}</td>
-                    </tr>
-                    <tr>
-                        <td id="t">Jenis Klasifikasi</td>
-                        <td>:</td>
-                        <td>{{ $data->jenis->name }}</td>
-                    </tr>
-                    <tr>
-                        <td id="t">Lokasi Arsip</td>
-                        <td>:</td>
-                        <td>{{ $data->lokasi_arsip }}</td>
-                    </tr>
-                    <tr>
-                        <td id="t">Tahun Arsip</td>
-                        <td>:</td>
-                        <td>{{ $data->tahun }}</td>
-                    </tr>
-                    <tr>
-                        <td id="t">Pencipta Arsip</td>
-                        <td>:</td>
-                        <td>{{ $struktural[0]->struktural_detail }}</td>
-                    </tr>
-                    <tr>
-                        <td id="t">Uraian</td>
-                        <td>:</td>
-                        <td>{{ $data->uraian_arsip }}</td>
-                    </tr>
-                    <tr>
-                        <td id="t">File Unggah</td>
-                        <td>:</td>
-                        <td><a href="{{ route('arsip.download', $data) }}" class="btn btn-sm btn-success ml-2"
-                                xdata-toggle="tooltip" data-placement="top" title="Download">Download <i
-                                    class="fa fa-download" aria-hidden="true"></i></a></td>
-                    </tr>
-                    <tr>
-                        <td id="t">Unit Kerja</td>
-                        <td>:</td>
-                        <td>{{ $struktural[0]->struktural.' / '.$struktural[0]->struktural_detail }}</td>
-                    </tr>
-                    @if (Auth::user()->hasRole('super admin') || Auth::user()->hasRole('admin'))
-                    <tr>
-                        <td id="t">User Pengunggah</td>
-                        <td>:</td>
-                        <td>{{ $data->user->name." (".implode($data->user->getRoleNames()->toarray()).")" }}</td>
-                    </tr>
-                    <tr>
-                        <td id="t">Status</td>
-                        <td>:</td>
-                        @if ($data->status == 0)
-                        <td>
-                            <div class="badge badge-warning">Menunggu Konfirmasi</div>
-                        </td>
-                        @elseif ($data->status == 1)
-                        <td>
-                            <div class="badge badge-success">Disetujui</div>
-                        </td>
-                        @elseif ($data->status == 2)
-                        <td>
-                            <div class="badge badge-danger">Koreksi</div>
-                        </td>
+@endpush
+
+@section('content_header')
+<div class="content-header-custom">
+    <div class="d-flex flex-column align-items-start">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb custom-breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ route('home') }}">
+                        <i class="fas fa-home me-1"></i> Dashboard
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ route('arsip.data') }}"> <i class="fas fa-archive me-1"></i> Data Arsip</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page"> Detail Arsip</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+@stop
+
+@section('content')
+<div class="container-fluid fade-in">
+    <div class="col-12">
+        <div class="card mb-4 border-0">
+            <div class="card-header bg-gradient-dark text-white">
+                <i class="fas fa-folder-open me-2"></i> Detail Arsip
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless table-sm align-middle">
+                    <tbody>
+                        <tr>
+                            <td id="t">Jenis Arsip</td>
+                            <td>:</td>
+                            <td>{{ $data->jenis_arsip->name ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td id="t">No. Berkas</td>
+                            <td>:</td>
+                            <td>{{ $data->no_berkas }}</td>
+                        </tr>
+                        <tr>
+                            <td id="t">No. Item</td>
+                            <td>:</td>
+                            <td>{{ $data->no_item }}</td>
+                        </tr>
+                        <tr>
+                            <td id="t">No. Boks</td>
+                            <td>:</td>
+                            <td>{{ $data->no_box }}</td>
+                        </tr>
+                        <tr>
+                            <td id="t">Jenis Klasifikasi</td>
+                            <td>:</td>
+                            <td>{{ $data->jenis->name ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td id="t">Lokasi Arsip</td>
+                            <td>:</td>
+                            <td>{{ $data->lokasi_arsip }}</td>
+                        </tr>
+                        <tr>
+                            <td id="t">Tahun Arsip</td>
+                            <td>:</td>
+                            <td>{{ $data->tahun }}</td>
+                        </tr>
+                        <tr>
+                            <td id="t">Pencipa Arsip</td>
+                            <td>:</td>
+                            <td>{{ $strukturInfo['struktural_detail'] }}</td>
+                        </tr>
+                        <tr>
+                            <td id="t">Uraian Arsip</td>
+                            <td>:</td>
+                            <td>{{ $data->uraian_arsip }}</td>
+                        </tr>
+                        <tr>
+                            <td id="t">File Arsip</td>
+                            <td>:</td>
+                            <td>
+                                <div class="file-box">
+                                    <i class="fas fa-file-alt fa-lg"></i>
+                                    <span>{{ basename($data->file_arsip) }}</span>
+                                    <a href="{{ route('arsip.download', $data) }}" class="btn btn-success btn-sm"
+                                        id="btnDownload">
+                                        <i class="fas fa-download me-1 text-white"></i> Unduh
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+
+                        @if (Auth::user()->hasRole('super admin') || Auth::user()->hasRole('admin'))
+                        <tr>
+                            <td id="t">User Pengunggah</td>
+                            <td>:</td>
+                            <td>
+                                {{ $data->user->name ?? '-' }}
+                                <small class="text-muted">({{ implode(', ', $data->user->getRoleNames()->toArray())
+                                    }})</small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="t">Status</td>
+                            <td>:</td>
+                            <td>
+                                @if ($data->status == 0)
+                                <span class="badge badge-warning badge-status">Menunggu Konfirmasi</span>
+                                @elseif ($data->status == 1)
+                                <span class="badge badge-success badge-status">Disetujui</span>
+                                @elseif ($data->status == 2)
+                                <span class="badge badge-danger badge-status">Koreksi</span>
+                                @endif
+                            </td>
+                        </tr>
                         @endif
-                    </tr>
-                    @endif
-                    @if (empty($data->keterangan))
 
-                    @else
-                    <tr>
-                        <td><strong><i>Keterangan</i></strong></td>
-                        <td>:</td>
-                        <td style="color: red"><strong><i>{{ $data->keterangan }}</i></strong></td>
-                    </tr>
-                    @endif
-                </tbody>
-            </table>
+                        @if (!empty($data->keterangan))
+                        <tr>
+                            <td id="t">Keterangan</td>
+                            <td>:</td>
+                            <td class="text-danger"><i>{{ $data->keterangan }}</i></td>
+                        </tr>
+                        @endif
+                    </tbody>
+                </table>
 
-            @if (Auth::user()->hasRole('super admin') || Auth::user()->hasRole('admin'))
-            <button type="button" id="approval" class="btn btn-secondary btn-sm mt-3" data-toggle="modal"
-                data-target="#exampleModal">
-                Approval
-            </button>
-            @endif
-            <a href="{{ route('arsip.data') }}" class="btn btn-primary btn-sm mt-3">Kembali</a>
-            {{-- <button class="btn btn-primary btn-sm mt-3" onclick="history.back()">Kembali</button> --}}
+                <div class="mt-4">
+                    @if (Auth::user()->hasRole('super admin') || Auth::user()->hasRole('admin'))
+                    <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal"
+                        data-target="#approvalModal">
+                        <i class="fas fa-check-circle me-1"></i> Approval
+                    </button>
+                    @endif
+                    <a href="{{ route('arsip.data') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-arrow-left me-1"></i> Kembali
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+{{-- ==============================
+MODAL APPROVAL
+============================== --}}
+<div class="modal fade" id="approvalModal" tabindex="-1" role="dialog" aria-labelledby="approvalModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form name="frm_edit" id="frm_edit" class="form-horizontal" action="{{ route('arsip.approval', $data) }}"
-            method="POST">
+        <form id="frm_edit" action="{{ route('arsip.approval', $data) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Form Persetujuan Arsip</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title" id="approvalModalLabel">Form Persetujuan Arsip</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+
                 <div class="modal-body">
-                    <div class="form-check">
+                    <div class="form-check mb-2">
                         <input class="form-check-input" type="radio" name="status" id="status1" value="0" {{
                             (old('status') ?? $data->status) == '0' ? 'checked' : '' }}>
                         <label for="status1" class="form-check-label">Menunggu Konfirmasi</label>
                     </div>
-                    <div class="form-check">
+
+                    <div class="form-check mb-2">
                         <input class="form-check-input" type="radio" name="status" id="status2" value="1" {{
                             (old('status') ?? $data->status) == '1' ? 'checked' : '' }}>
                         <label for="status2" class="form-check-label">Disetujui</label>
                     </div>
-                    <div class="form-check">
+
+                    <div class="form-check mb-2">
                         <input class="form-check-input" type="radio" name="status" id="status3" value="2" {{
                             (old('status') ?? $data->status) == '2' ? 'checked' : '' }}>
-                        <label for="status3" class="form-check-label">Koreksi</label>
+                        <label for="status3" class="form-check-label text-danger">Koreksi</label>
                     </div>
-                    <div>
-                        <textarea class="form-control mt-2" name="keterangan" id="keterangan" cols="10" rows="2"
-                            placeholder="Keterangan Koreksi..."
-                            required>{{ old('keterangan') ?? $data->keterangan }}</textarea>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button onclick="form_submit()" id="btnSubmit" class="btn btn-primary">Simpan</button>
-                    </div>
+
+                    <textarea class="form-control mt-3" name="keterangan" id="keterangan" rows="3"
+                        placeholder="Tuliskan keterangan koreksi..." @if ($data->status != 2) hidden @endif>
+                        {{ old('keterangan') ?? $data->keterangan }}</textarea>
                 </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary" id="btnSubmit">Simpan</button>
+                </div>
+            </div>
         </form>
     </div>
 </div>
 @endsection
-@push('scripts')
+
+@push('js')
 <script>
     $(document).ready(function(){
-        
-       if($('input[name="status"]:checked').val() == '0' || $('input[name="status"]:checked').val() == '1' ) {
-    
-            $('#keterangan').attr('hidden',true);
+    const textarea = $('#keterangan');
+
+    $('input[name="status"]').on('change', function(){
+        if ($(this).val() === '2') textarea.removeAttr('hidden').focus();
+        else textarea.attr('hidden', true).val('');
+    });
+
+    $('#btnSubmit').on('click', function(e){
+        if ($('input[name="status"]:checked').val() === '2' && textarea.val().trim() === '') {
+            alert('Keterangan koreksi harus diisi!');
+            e.preventDefault();
         }
-        
-        $('#approval').on('click', function(){
-            if($('input[name="status"]:checked').val() == '0' || $('input[name="status"]:checked').val() == '1' ) {
-            
-                $('#keterangan').attr('hidden',true);
-            }
-            // var value = $('input[name="status"]:checked').val();
-            // if (value === '2') {
-            //     $('#keterangan').attr('hidden',false);
-            // }else{
-            //      $('#keterangan').attr('hidden',true);
-            // }
-        });
-        
-       //$('#keterangan').attr('hidden',true);
-        $('input[type=radio][name=status]').change(function(){
-            if(this.value == '0'){
-                $('#keterangan').attr('hidden',true);
-                $('#keterangan').val('');
-            }else if (this.value == '1'){
-                $('#keterangan').attr('hidden',true);
-                $('#keterangan').val('');
-            }else if(this.value == '2'){
-              
-                $('#keterangan').attr('hidden',false); 
-            }
-        }); 
-        
-        function form_submit() {
-             document.getElementById('frm_edit').submit();
-        }
+    });
 
-        $('#btnSubmit').on('click', function(){
-               if($('input[name="status"]:checked').val() == '2' && $('#keterangan').val() === '' ) {
-                   alert('keterangan koreksi harus di isi!');
-                   return false
-                }
-
-                form_submit();
-
-              
-            });
-        
-       
-       
-    })
-    
+    // 🔹 Spinner untuk tombol download
+    $('#btnDownload').on('click', function() {
+        const btn = $(this);
+        const originalHTML = btn.html();
+        btn.prop('disabled', true);
+        btn.html('<span class="spinner-border spinner-border-sm me-2"></span> Mengunduh...');
+        // Setelah 3 detik, kembalikan (browser handle download)
+        setTimeout(() => {
+            btn.prop('disabled', false);
+            btn.html(originalHTML);
+        }, 3000);
+    });
+});
 </script>
 @endpush

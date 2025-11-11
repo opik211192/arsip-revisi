@@ -57,7 +57,6 @@
         width: 100% !important;
     }
 
-    /* 🔹 Responsif mobile */
     @media (max-width: 768px) {
         .form-section {
             flex-direction: column;
@@ -94,20 +93,58 @@
         text-align: left;
         margin-right: 10px;
     }
+
+    /* 🔹 Progress Modal */
+    .progress-modal .modal-content {
+        border-radius: 12px;
+        text-align: center;
+        padding: 25px;
+    }
+
+    .progress {
+        height: 8px;
+        border-radius: 10px;
+    }
+
+    .progress-bar {
+        width: 100%;
+        animation: progressMove 2s linear infinite;
+        background: linear-gradient(90deg, #007bff, #00c0ef, #007bff);
+        background-size: 200% 100%;
+    }
+
+    @keyframes progressMove {
+        0% {
+            background-position: 200% 0;
+        }
+
+        100% {
+            background-position: -200% 0;
+        }
+    }
 </style>
 @endsection
 
-@push('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script>
-<script>
-    $(document).ready(function() {
-        $('.select2').select2({
-            theme: 'classic',
-            width: '100%',
-        });
-    });
-</script>
-@endpush
+
+@section('content_header')
+<div class="content-header-custom">
+    <div class="d-flex flex-column align-items-start">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb custom-breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ route('home') }}">
+                        <i class="fas fa-home me-1"></i> Dashboard
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ route('arsip.data') }}"> <i class="fas fa-archive me-1"></i> Data Arsip</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page"> Tambah Arsip</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+@stop
 
 @section('content')
 @if (session('success'))
@@ -119,11 +156,12 @@
 <div class="col-lg-12 col-md-11 mx-auto">
     <div class="card">
         <div class="card-header bg-gradient-dark text-white">
-            <i class="fas fa-archive"></i> Formulir Arsip
+            <i class="fas fa-folder-open me-2"></i> Tambah Arsip
         </div>
 
         <div class="card-body">
-            <form action="{{ route('arsip.store') }}" method="post" enctype="multipart/form-data">
+            {{-- ✅ tambahkan id="arsipForm" --}}
+            <form id="arsipForm" action="{{ route('arsip.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
 
                 {{-- 🔹 Form Section: KIRI & KANAN --}}
@@ -162,19 +200,19 @@
 
                         <div class="form-group">
                             <label for="no_berkas">No. Berkas</label>
-                            <input type="text" class="form-control" name="no_berkas" id="no_berkas"
-                                placeholder="01/A/BKS" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="no_item">No. Item</label>
-                            <input type="text" class="form-control" id="no_item" name="no_item" placeholder="01"
+                            <input type="text" class="form-control" name="no_berkas" id="no_berkas" placeholder="1 - 10"
                                 required>
                         </div>
 
                         <div class="form-group">
-                            <label for="no_box">No. Box</label>
-                            <input type="text" class="form-control" id="no_box" name="no_box" placeholder="BOX-12"
+                            <label for="no_item">No. Item</label>
+                            <input type="text" class="form-control" id="no_item" name="no_item" placeholder="1 - 10"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="no_box">No. Boks</label>
+                            <input type="text" class="form-control" id="no_box" name="no_box" placeholder="1 - 10"
                                 required>
                         </div>
 
@@ -190,19 +228,15 @@
                                     </label>
                                     <div class="w-100 d-flex align-items-center gap-2">
                                         <input type="file" name="file_arsip[]" class="form-control mr-1"
-                                            accept=".pdf,.doc,.docx,.xls,.xlsx">
-                                        <button type="button" class="btn btn-success btn-sm add-file"
-                                            title="Tambah file" hidden>
-                                            <i class="fas fa-plus"></i>
-                                        </button>
+                                            accept=".pdf,.doc,.docx,.xls,.xlsx,.zip,.rar">
                                     </div>
                                 </div>
                             </div>
 
                             <small class="text-muted d-block mt-2">
                                 <i class="fas fa-info-circle me-1"></i>
-                                Format: <strong>.pdf, .doc, .docx, .xls, .xlsx</strong> &nbsp; | &nbsp;
-                                Maksimal per file: <strong>5 MB</strong>
+                                Format: <strong>.pdf, .doc, .docx, .xls, .xlsx, .zip, .rar</strong> &nbsp; | &nbsp;
+                                Maksimal per file: <strong>50 MB</strong>
                             </small>
                         </fieldset>
                     </div>
@@ -244,15 +278,14 @@
                     </div>
                 </div>
 
-                {{-- Hidden --}}
                 <input type="hidden" name="user_id" value="{{ $user->id }}">
 
-                {{-- Tombol --}}
                 <div class="text-end mt-4">
                     <a href="{{ route('arsip.index') }}" class="btn btn-secondary btn-sm">
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>
-                    <button type="submit" class="btn btn-primary btn-sm">
+                    {{-- ✅ tambahkan id="btnSubmit" --}}
+                    <button type="submit" id="btnSubmit" class="btn btn-primary btn-sm">
                         <i class="fas fa-save"></i> Simpan
                     </button>
                 </div>
@@ -260,43 +293,35 @@
         </div>
     </div>
 </div>
+
+{{-- ✅ Modal Progress --}}
+<div class="modal fade progress-modal" id="progressModal" tabindex="-1" role="dialog" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content p-4">
+            <h5 class="mb-3">
+                <i class="fas fa-spinner fa-spin text-primary me-2"></i> Sedang menyimpan data...
+            </h5>
+            <p class="text-muted mb-3">Harap tidak menutup halaman ini sampai proses selesai.</p>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.js"></script>
 <script>
-    // Batas maksimal file
-    const maxFiles = 5;
+    $(document).ready(function() {
+    $('.select2').select2({ theme: 'classic', width: '100%' });
 
-    // Tambah input file
-    $(document).on('click', '.add-file', function() {
-        const currentFiles = $('#file-wrapper .file-group').length;
-
-        if (currentFiles >= maxFiles) {
-            alert(`Maksimal ${maxFiles} file yang boleh diupload.`);
-            return;
-        }
-
-        let newFileInput = `
-        <div class="file-group mb-3">
-            <label class="pt-2">
-                <i class="fas fa-paperclip text-secondary me-1"></i> File Tambahan
-            </label>
-            <div class="w-100 d-flex align-items-center gap-2">
-                <input type="file" name="file_arsip[]" class="form-control mr-1"
-                    accept=".pdf,.doc,.docx,.xls,.xlsx">
-                <button type="button" class="btn btn-danger btn-sm remove-file" title="Hapus file">
-                    <i class="fas fa-minus"></i>
-                </button>
-            </div>
-        </div>`;
-        
-        $('#file-wrapper').append(newFileInput);
+    // Tampilkan modal progress saat form disubmit
+    $('#arsipForm').on('submit', function(e) {
+        $('#btnSubmit').prop('disabled', true);
+        $('#progressModal').modal('show');
     });
-
-    // Hapus input file
-    $(document).on('click', '.remove-file', function() {
-        $(this).closest('.file-group').remove();
-    });
+});
 </script>
-
 @endpush

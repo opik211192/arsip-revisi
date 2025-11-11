@@ -41,17 +41,42 @@
         padding: 3px 8px;
         font-size: 0.8rem;
     }
+
+    /* 🔹 animasi fade out untuk alert */
+    .fade-out {
+        transition: opacity 0.6s ease;
+        opacity: 0;
+    }
 </style>
 @endsection
+
+@section('content_header')
+<div class="content-header-custom">
+    <div class="d-flex flex-column align-items-start">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb custom-breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ route('home') }}">
+                        <i class="fas fa-home me-1"></i> Dashboard
+                    </a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Data Arsip</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+@stop
 
 @section('content')
 
 @if (session('success'))
-<div class="alert alert-success">{{ session('success') }}</div>
+<div class="alert alert-success alert-dismissible fade show" id="autoDismissAlert">
+    <strong><i class="fas fa-check-circle"></i></strong> {{ session('success') }}
+</div>
 @endif
 
 <div class="card">
-    <div class="card-header bg-gradient-dark text-white">Data Arsip</div>
+    <div class="card-header bg-gradient-dark text-white"><i class="fas fa-archive me-2"></i> Data Arsip</div>
     <div class="card-body">
         <table class="table table-bordered table-striped table-sm w-100" id="table-datatable">
             <thead>
@@ -89,7 +114,7 @@
     </div>
 </div>
 
-{{-- Modal persetujuan hanya muncul untuk admin --}}
+{{-- Modal persetujuan hanya untuk admin --}}
 @if (Auth::user()->roles->pluck('name')->contains('super admin') ||
 Auth::user()->roles->pluck('name')->contains('admin'))
 <div class="modal fade" id="modalForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -136,6 +161,15 @@ Auth::user()->roles->pluck('name')->contains('admin'))
 
 <script>
     $(function () {
+    // 🔹 Alert otomatis hilang setelah 5 detik
+    setTimeout(function () {
+        const alertBox = document.getElementById('autoDismissAlert');
+        if (alertBox) {
+            alertBox.classList.add('fade-out');
+            setTimeout(() => alertBox.remove(), 600); // hapus setelah efek fade selesai
+        }
+    }, 5000); // 5 detik
+
     let isAdmin = @json(Auth::user()->roles->pluck('name')->contains('super admin') ||
                         Auth::user()->roles->pluck('name')->contains('admin'));
 
@@ -199,7 +233,6 @@ Auth::user()->roles->pluck('name')->contains('admin'))
             infoEmpty: "Tidak ada data tersedia."
         }
     });
-    
 });
 </script>
 @endpush
