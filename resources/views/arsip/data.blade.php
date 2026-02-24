@@ -52,17 +52,27 @@
 
 @section('content_header')
 <div class="content-header-custom">
-    <div class="d-flex flex-column align-items-start">
+    <div class="d-flex justify-content-between align-items-center">
+
+        {{-- Breadcrumb kiri --}}
         <nav aria-label="breadcrumb">
-            <ol class="breadcrumb custom-breadcrumb">
+            <ol class="breadcrumb custom-breadcrumb mb-0">
                 <li class="breadcrumb-item">
                     <a href="{{ route('home') }}">
                         <i class="fas fa-home me-1"></i> Dashboard
                     </a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Data Arsip</li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    Data Arsip
+                </li>
             </ol>
         </nav>
+
+        {{-- Tombol kanan --}}
+        <a href="{{ route('arsip.index') }}" class="btn btn-success">
+            <i class="fas fa-plus me-1"></i> Tambah Data
+        </a>
+
     </div>
 </div>
 @stop
@@ -178,6 +188,7 @@ Auth::user()->roles->pluck('name')->contains('admin'))
         processing: true,
         serverSide: true,
         ajax: "{{ route('arsip.data') }}",
+        order: [[0, 'desc']],
         columns: isAdmin ? [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             { data: 'uraian_arsip', name: 'uraian_arsip' },

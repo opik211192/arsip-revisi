@@ -131,6 +131,12 @@
         <button type="submit" class="btn btn-primary btn-block">
             <span class="fas fa-sign-in-alt"></span> Login
         </button>
+
+        <div class="text-center mt-3">
+            <a href="{{ route('password.request') }}">
+                Lupa Password?
+            </a>
+        </div>
     </div>
 </form>
 @stop

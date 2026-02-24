@@ -122,6 +122,26 @@
             background-position: -200% 0;
         }
     }
+
+    /* 🔹 Override khusus input range dua kolom */
+    .form-group .range-inputs {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 4px !important;
+        flex: 0 0 auto !important;
+    }
+
+    .form-group .range-inputs input[type="number"] {
+        width: 80px !important;
+        /* panjang input dikontrol di sini */
+        padding: 4px 6px !important;
+    }
+
+    .form-group .range-inputs span {
+        margin: 0 2px;
+        color: #555;
+        font-weight: 600;
+    }
 </style>
 @endsection
 
@@ -189,7 +209,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="tahun">Tahun</label>
+                            <label for="tahun">Tahun Penciptaan</label>
                             <select name="tahun" id="tahun" class="form-control" required>
                                 <option value="" selected disabled>Pilih Tahun</option>
                                 @for ($i = date('Y'); $i >= 1985; $i--)
@@ -200,20 +220,38 @@
 
                         <div class="form-group">
                             <label for="no_berkas">No. Berkas</label>
-                            <input type="text" class="form-control" name="no_berkas" id="no_berkas" placeholder="1 - 10"
-                                required>
+                            <div class="range-inputs">
+                                <input type="number" class="form-control" id="no_berkas_awal" placeholder="Dari" min="1"
+                                    required>
+                                <span>-</span>
+                                <input type="number" class="form-control" id="no_berkas_akhir" placeholder="Sampai"
+                                    min="1">
+                            </div>
+                            <input type="hidden" name="no_berkas" id="no_berkas">
                         </div>
 
                         <div class="form-group">
                             <label for="no_item">No. Item</label>
-                            <input type="text" class="form-control" id="no_item" name="no_item" placeholder="1 - 10"
-                                required>
+                            <div class="range-inputs">
+                                <input type="number" class="form-control" id="no_item_awal" placeholder="Dari" min="1"
+                                    required>
+                                <span>-</span>
+                                <input type="number" class="form-control" id="no_item_akhir" placeholder="Sampai"
+                                    min="1">
+                            </div>
+                            <input type="hidden" name="no_item" id="no_item">
                         </div>
 
                         <div class="form-group">
                             <label for="no_box">No. Boks</label>
-                            <input type="text" class="form-control" id="no_box" name="no_box" placeholder="1 - 10"
-                                required>
+                            <div class="range-inputs">
+                                <input type="number" class="form-control" id="no_box_awal" placeholder="Dari" min="1"
+                                    required>
+                                <span>-</span>
+                                <input type="number" class="form-control" id="no_box_akhir" placeholder="Sampai"
+                                    min="1">
+                            </div>
+                            <input type="hidden" name="no_box" id="no_box">
                         </div>
 
                         <fieldset class="mt-4 border rounded-3 p-3">
@@ -321,6 +359,44 @@
     $('#arsipForm').on('submit', function(e) {
         $('#btnSubmit').prop('disabled', true);
         $('#progressModal').modal('show');
+    });
+});
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const pairs = [
+        { awal: 'no_berkas_awal', akhir: 'no_berkas_akhir', target: 'no_berkas' },
+        { awal: 'no_item_awal', akhir: 'no_item_akhir', target: 'no_item' },
+        { awal: 'no_box_awal', akhir: 'no_box_akhir', target: 'no_box' },
+    ];
+
+    pairs.forEach(p => {
+        const awal = document.getElementById(p.awal);
+        const akhir = document.getElementById(p.akhir);
+        const target = document.getElementById(p.target);
+
+        function updateTarget() {
+            const val1 = awal.value.trim();
+            const val2 = akhir.value.trim();
+
+            // 🔹 Logika baru biar bisa satu input aja
+            if (val1 && val2) {
+                target.value = `${val1} - ${val2}`; // dua-duanya diisi
+            } else if (val1 && !val2) {
+                target.value = val1; // cuma awal diisi
+            } else if (!val1 && val2) {
+                target.value = val2; // cuma akhir diisi
+            } else {
+                target.value = ''; // dua-duanya kosong
+            }
+        }
+
+        // Jalankan saat diketik
+        awal.addEventListener('input', updateTarget);
+        akhir.addEventListener('input', updateTarget);
+
+        // Jalankan saat halaman pertama kali dibuka (jaga-jaga)
+        updateTarget();
     });
 });
 </script>

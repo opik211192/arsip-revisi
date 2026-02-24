@@ -32,7 +32,7 @@
                             @method('PUT')
 
                             <div class="form-group row">
-                                <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
+                                <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Nama') }}</label>
 
                                 <div class="col-md-6">
                                     <input id="name" type="text"
@@ -48,7 +48,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address')
+                                <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Alamat Email')
                                     }}</label>
 
                                 <div class="col-md-6">
@@ -133,8 +133,8 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group row">
-                                        <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Old
-                                            Password') }}</label>
+                                        <label for="password" class="col-md-4 col-form-label text-md-right">{{
+                                            __('Password Lama') }}</label>
 
                                         <div class="col-md-6">
                                             <input id="password" type="password"
@@ -150,8 +150,8 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('New
-                                            Password') }}</label>
+                                        <label for="password" class="col-md-4 col-form-label text-md-right">{{
+                                            __('Password Baru') }}</label>
 
                                         <div class="col-md-6">
                                             <input id="password" type="password"
@@ -169,7 +169,7 @@
                                     <div class="form-group row">
                                         <label for="newpassword-confirm"
                                             class="col-md-4 col-form-label text-md-right">{{
-                                            __('Confirm Password') }}</label>
+                                            __('Konfirmasi Password') }}</label>
 
                                         <div class="col-md-6">
                                             <input id="newpassword-confirm" type="password" class="form-control"
@@ -184,8 +184,11 @@
                             <div class="form-group row mb-0 mt-4">
                                 <div class="col-md-6 offset-md-4">
                                     <button type="submit" class="btn btn-primary">
-                                        {{ __('Update') }}
+                                        {{ __('Ubah') }}
                                     </button>
+                                    <a href="{{ route('user.data') }}" class="btn btn-danger">
+                                        {{ __('Batal') }}
+                                    </a>
                                 </div>
                             </div>
                         </form>

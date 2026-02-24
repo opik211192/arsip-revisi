@@ -31,26 +31,34 @@
             @foreach ($users as $index => $user)
             <tr>
                 <td>{{ $index + 1 }}</td>
-                <td>{{ $user->name." (".implode($user->getRoleNames()->toArray()).")"; }}</td>
+                <td>{{ $user->name }} ({{ implode(', ', $user->getRoleNames()->toArray()) }})</td>
                 <td>{{ $user->username }}</td>
                 <td>{{ $user->email }}</td>
-                <td>{{ $user->struktural->name." || ".$user->struktural_detail->name }}</td>
+                <td>{{ $user->struktural->name }} || {{ $user->struktural_detail->name }}</td>
                 <td>
                     <div class="d-flex">
-                        @if ($user->hasRole('super admin'))
-                        <a href="{{ route('user.edit', $user) }}" class="btn btn-success btn-sm" data-toggle="Update"
-                            data-placement="top" title="Update"><i class="fas fa-pen"></i></a>
-                        @else
-                        <a href="{{ route('user.edit', $user) }}" class="btn btn-success btn-sm" data-toggle="Update"
-                            data-placement="top" title="Update"><i class="fas fa-pen"></i></a>&nbsp;
-                        <form action="{{ route('user.delete', $user) }}" method="post">
+
+                        {{-- SUPER ADMIN & ADMIN --}}
+                        @if(auth()->user()->hasAnyRole(['super admin', 'admin']))
+                        <a href="{{ route('user.edit', $user) }}" class="btn btn-success btn-sm">
+                            <i class="fas fa-pen"></i>
+                        </a>&nbsp;
+
+                        <form action="{{ route('user.delete', $user) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" data-toggle="Delete"
-                                data-placement="top" title="Delete" onclick="return confirm('Are you sure?')"><i
-                                    class="fas fa-trash"></i></button>
+                            <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </form>
+
+                        {{-- USER BIASA → HANYA DIRI SENDIRI --}}
+                        @elseif(auth()->id() === $user->id)
+                        <a href="{{ route('user.edit', $user) }}" class="btn btn-success btn-sm" title="Edit">
+                            <i class="fas fa-pen"></i>
+                        </a>
                         @endif
+
                     </div>
                 </td>
             </tr>

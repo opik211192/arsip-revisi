@@ -273,11 +273,11 @@ return [
         [
             'text'    => 'User',
             'icon'    => 'fas fa-fw fa-users',
-            'can'     => 'show users',
             'submenu' => [
                 [
                     'text' => 'Buat User',
                     'route'  => 'user.create',
+                    'can'   => 'show user',
                 ],
                 [
                     'text'    => 'Data User',

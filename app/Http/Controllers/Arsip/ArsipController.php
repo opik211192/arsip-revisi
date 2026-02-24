@@ -43,19 +43,29 @@ class ArsipController extends Controller
     public function store(Request $request)
     {
         $validateData = $request->validate([
-            'jenis_arsip_id'   => 'required',
-            'lokasi_arsip'     => 'required',
-            'jenis_id'         => 'required',
-            'no_berkas'        => 'required',
-            'no_box'           => 'required',
-            'no_item'          => 'required',
-            'tahun'            => 'required',
-            'id_pencipta_arsip'=> 'required',
-            'uraian_arsip'     => 'required',
-            'user_id'          => 'required',
-            'file_arsip'       => 'required',
-            'file_arsip.*'     => 'mimes:pdf,doc,docx,xls,xlsx,zip,rar|max:51200',
-        ]);
+            'jenis_arsip_id'    => 'required',
+            'lokasi_arsip'      => 'required',
+            'jenis_id'          => 'required',
+            'no_berkas'         => 'required',
+            'no_box'            => 'required',
+            'no_item'           => 'required',
+            'tahun'             => 'required',
+            'id_pencipta_arsip' => 'required',
+            'uraian_arsip'      => 'required',
+
+            // ❌ user_id tidak divalidasi dari input
+            // 'user_id' => 'required',
+
+            'file_arsip'        => 'required',
+            'file_arsip.*'      => 'mimes:pdf,doc,docx,xls,xlsx,zip,rar|max:51200',
+        ]); 
+
+        // 🔐 PAKSA user_id dari user login
+        $validateData['user_id'] = auth()->id();
+
+        // =======================
+        // ⬇️⬇️⬇️ BAGIAN UPLOAD TIDAK DIUBAH ⬇️⬇️⬇️
+        // =======================
 
         $file = $request->file('file_arsip')[0] ?? null; // ambil file pertama
         if ($file) {
@@ -90,6 +100,10 @@ class ArsipController extends Controller
             $validateData['file_arsip'] = "{$struktural}/{$detail}/{$jenis}/{$tahun}/{$namaFile}";
         }
 
+        // =======================
+        // ⬆️⬆️⬆️ UPLOAD TETAP ⬆️⬆️⬆️
+        // =======================
+
         // Simpan data arsip
         $arsip = \App\Models\Arsip::create($validateData);
 
@@ -103,8 +117,11 @@ class ArsipController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
 
-        return redirect()->route('arsip.data')->with('success', 'Data berhasil ditambahkan');
+        return redirect()
+            ->route('arsip.data')
+            ->with('success', 'Data berhasil ditambahkan');
     }
+
 
 
 

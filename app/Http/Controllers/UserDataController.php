@@ -17,16 +17,35 @@ class UserDataController extends Controller
          $this->middleware('auth');
     }
 
-    public function index()
+/*************  ✨ Windsurf Command ⭐  *************/
+/**
+ * Menampilkan halaman user management untuk super admin dan admin
+ *
+ * @return \Illuminate\Http\Response
+ */
+/*******  bc5cea87-80dc-4757-bf4a-8095b63aba99  *******/    public function index()
     {
-        $users = User::all();
-        $strukturals = Struktural::all();
-        $struktural_detail = Struktural_detail::all();
-        return view('auth.user', compact('users', 'strukturals', 'struktural_detail'));
+        if (auth()->user()->hasAnyRole(['super admin', 'admin'])) {
+            // SUPER ADMIN & ADMIN → lihat semua user
+            $users = User::with(['struktural', 'struktural_detail'])->get();
+        } else {
+            // ROLE LAIN → hanya lihat dirinya sendiri
+            $users = User::with(['struktural', 'struktural_detail'])
+                ->where('id', auth()->id())
+                ->get();
+        }
+
+        return view('auth.user', compact('users'));
     }
+
 
     public function create()
     {
+        if (!auth()->user()->hasAnyRole(['super admin', 'admin'])) {
+            abort(403);
+        }
+
+
         $strukturals = Struktural::all();
         $struktural_detail = Struktural_detail::all();
         return view('auth.register', compact('strukturals', 'struktural_detail'));
@@ -59,6 +78,11 @@ class UserDataController extends Controller
 
     public function edit(User $user)
     {
+        if (!auth()->user()->hasAnyRole(['super admin', 'admin']) && auth()->id() !== $user->id) 
+        {
+            abort(403, 'Anda tidak berhak mengedit user ini');
+        }
+
          $strukturals = Struktural::all();
         $struktural_detail = Struktural_detail::all();
         $struktur = DB::select('SELECT a.id,
@@ -183,6 +207,10 @@ class UserDataController extends Controller
 
     public function delete(User $user)
     {
+        if (!auth()->user()->hasAnyRole(['super admin', 'admin'])) {
+            abort(403);
+        }
+        
         $user->delete();
         return redirect()->route('user.data')->with('danger', "Hapus $user->nama berhasil");
     }

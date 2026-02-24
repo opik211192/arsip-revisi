@@ -108,7 +108,7 @@
                     </a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="{{ route('arsip_draft.index') }}"> <i class="fas fa-archive me-1"></i> Data Arsip</a>
+                    <a href="{{ route('arsip.data') }}"> <i class="fas fa-archive me-1"></i> Data Arsip</a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">Edit Arsip</li>
             </ol>
