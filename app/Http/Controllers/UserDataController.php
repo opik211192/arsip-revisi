@@ -23,7 +23,8 @@ class UserDataController extends Controller
  *
  * @return \Illuminate\Http\Response
  */
-/*******  bc5cea87-80dc-4757-bf4a-8095b63aba99  *******/    public function index()
+/*******  bc5cea87-80dc-4757-bf4a-8095b63aba99  *******/    
+    public function index()
     {
         if (auth()->user()->hasAnyRole(['super admin', 'admin'])) {
             // SUPER ADMIN & ADMIN → lihat semua user

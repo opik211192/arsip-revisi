@@ -94,6 +94,54 @@
         text-align: left;
         margin-right: 10px;
     }
+
+    /* 🔹 Progress Modal */
+    .progress-modal .modal-content {
+        border-radius: 12px;
+        text-align: center;
+        padding: 25px;
+    }
+
+    .progress {
+        height: 8px;
+        border-radius: 10px;
+    }
+
+    .progress-bar {
+        width: 100%;
+        animation: progressMove 2s linear infinite;
+        background: linear-gradient(90deg, #007bff, #00c0ef, #007bff);
+        background-size: 200% 100%;
+    }
+
+    @keyframes progressMove {
+        0% {
+            background-position: 200% 0;
+        }
+
+        100% {
+            background-position: -200% 0;
+        }
+    }
+
+    /* 🔹 Range input styling */
+    .form-group .range-inputs {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 4px !important;
+        flex: 0 0 auto !important;
+    }
+
+    .form-group .range-inputs input[type="number"] {
+        width: 80px !important;
+        padding: 4px 6px !important;
+    }
+
+    .form-group .range-inputs span {
+        margin: 0 2px;
+        color: #555;
+        font-weight: 600;
+    }
 </style>
 @endsection
 
@@ -183,15 +231,37 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="no_berkas">No. Berkas</label>
-                            <input type="text" class="form-control" name="no_berkas" id="no_berkas"
-                                value="{{ $arsip->no_berkas }}" required>
+                            <label>No. Berkas</label>
+                            <div class="range-inputs">
+                                <input type="number" class="form-control" id="no_berkas_awal" placeholder="Dari"
+                                    min="1">
+                                <span>-</span>
+                                <input type="number" class="form-control" id="no_berkas_akhir" placeholder="Sampai"
+                                    min="1">
+                            </div>
+                            <input type="hidden" name="no_berkas" id="no_berkas" value="{{ $arsip->no_berkas }}">
                         </div>
 
                         <div class="form-group">
-                            <label for="no_box">No. Box</label>
-                            <input type="text" class="form-control" id="no_box" name="no_box"
-                                value="{{ $arsip->no_box }}" required>
+                            <label>No. Item</label>
+                            <div class="range-inputs">
+                                <input type="number" class="form-control" id="no_item_awal" placeholder="Dari" min="1">
+                                <span>-</span>
+                                <input type="number" class="form-control" id="no_item_akhir" placeholder="Sampai"
+                                    min="1">
+                            </div>
+                            <input type="hidden" name="no_item" id="no_item" value="{{ $arsip->no_item }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label>No. Boks</label>
+                            <div class="range-inputs">
+                                <input type="number" class="form-control" id="no_box_awal" placeholder="Dari" min="1">
+                                <span>-</span>
+                                <input type="number" class="form-control" id="no_box_akhir" placeholder="Sampai"
+                                    min="1">
+                            </div>
+                            <input type="hidden" name="no_box" id="no_box" value="{{ $arsip->no_box }}">
                         </div>
 
                         <fieldset class="mt-4 border rounded-3 p-3">
@@ -280,5 +350,56 @@
             width: '100%',
         });
     });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+    function splitValue(value) {
+        if (!value) return ['', ''];
+
+        if (value.includes('-')) {
+            let parts = value.split('-');
+            return [parts[0].trim(), parts[1].trim()];
+        }
+
+        return [value, ''];
+    }
+
+    const pairs = [
+        { awal: 'no_berkas_awal', akhir: 'no_berkas_akhir', target: 'no_berkas' },
+        { awal: 'no_item_awal', akhir: 'no_item_akhir', target: 'no_item' },
+        { awal: 'no_box_awal', akhir: 'no_box_akhir', target: 'no_box' },
+    ];
+
+    pairs.forEach(p => {
+        const awal = document.getElementById(p.awal);
+        const akhir = document.getElementById(p.akhir);
+        const target = document.getElementById(p.target);
+
+        // ✅ isi otomatis dari DB
+        const [val1, val2] = splitValue(target.value);
+        awal.value = val1;
+        akhir.value = val2;
+
+        function updateTarget() {
+            const v1 = awal.value.trim();
+            const v2 = akhir.value.trim();
+
+            if (v1 && v2) {
+                target.value = `${v1} - ${v2}`;
+            } else if (v1) {
+                target.value = v1;
+            } else if (v2) {
+                target.value = v2;
+            } else {
+                target.value = '';
+            }
+        }
+
+        awal.addEventListener('input', updateTarget);
+        akhir.addEventListener('input', updateTarget);
+    });
+});
 </script>
 @endpush
